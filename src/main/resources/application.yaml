@@ -4,9 +4,12 @@ server:
 #spring??
 spring:
   datasource:
-    username: aliyun2028857006
-    password: 598949Lytxgz
-    url: jdbc:mysql://rm-cn-pe33kbti0000njgo.rwlb.cn-chengdu.rds.aliyuncs.com:3306/online_book_shop?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+    #username: aliyun2028857006
+    #password: 598949Lytxgz
+    #url: jdbc:mysql://rm-cn-pe33kbti0000njgo.rwlb.cn-chengdu.rds.aliyuncs.com:3306/online_book_shop?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   mvc:

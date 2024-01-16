@@ -19,4 +19,32 @@
         level,createTime,updateTime,
         isDeleted
     </sql>
+
+    <select id="login" resultType="com.platform.pojo.Admin">
+        select id,adminName,level from admin where adminName = #{adminName} and password = #{password}
+    </select>
+
+    <select id="getByAdminName" resultType="com.platform.pojo.Admin">
+        select adminName,isDeleted from admin where adminName = #{adminName}
+    </select>
+
+    <insert id="addAdmin">
+        insert into admin (adminName,password,level,createTime,isDeleted) values (#{adminName},#{password},#{level},#{createTime},#{isDeleted})
+    </insert>
+
+    <delete id="deleteByAdminName">
+        update admin set isDeleted = #{isDeleted},updateTime = #{updateTime} where adminName = #{adminName}
+    </delete>
+
+    <update id="updateByAdminName">
+        update admin set password = #{password},level = #{level}, updateTime = #{updateTime}, isDeleted = #{isDeleted} where adminName = #{adminName}
+    </update>
+
+    <select id="selectAdmin" resultType="com.platform.pojo.Admin">
+        select adminName ,level ,isDeleted from admin where adminName = #{adminName}
+    </select>
+
+    <select id="selectAllAdmin" resultType="com.platform.pojo.Admin">
+        select adminName ,level ,isDeleted from admin
+    </select>
 </mapper>
