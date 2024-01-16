@@ -7,9 +7,10 @@
     <resultMap id="BaseResultMap" type="com.platform.pojo.Type">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parentId" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,type
+        id,type,parentId
     </sql>
 </mapper>

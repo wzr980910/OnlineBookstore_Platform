@@ -16,7 +16,8 @@ public class Shopping implements Serializable {
 
     private Long bookId;
 
-    private String userNumberBookId;
+    @TableField("userId")
+    private String userId;
 
     private String bookName;
 

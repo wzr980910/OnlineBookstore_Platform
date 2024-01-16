@@ -17,5 +17,7 @@ public class Type implements Serializable {
 
     private String type;
 
+    private Integer parentId;
+
     private static final long serialVersionUID = 1L;
 }

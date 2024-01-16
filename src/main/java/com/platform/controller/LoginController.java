@@ -27,11 +27,8 @@ import static com.platform.util.result.ResultCode.USER_LOGIN_ERROR;
 @RestController
 @RequestMapping("/adminLogin")
 public class LoginController {
-    private AdminService adminService;
-
     @Autowired
-    public LoginController(AdminService adminService){this.adminService = adminService;}
-
+    private AdminService adminService;
 
     //管理员登录操作
     @PostMapping("/login")

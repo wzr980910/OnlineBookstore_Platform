@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.platform.common.DeleteState.IS_DELETE;
+import static com.platform.common.DeleteState.NO_DELETE;
 import static com.platform.util.result.ResultCode.*;
 
 /**
@@ -27,21 +29,10 @@ import static com.platform.util.result.ResultCode.*;
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         implements AdminService {
 
-    //定义删除状态
-    public static final int NO_DELETE = 1;
-    public static final int IS_DELETE = 2;
+    @Autowired
     private AdminMapper adminMapper;
+    @Autowired
     private JwtHelper jwtHelper;
-
-    @Autowired
-    public AdminServiceImpl (AdminMapper adminMapper) {
-        this.adminMapper = adminMapper;
-    }
-
-    @Autowired
-    public void setJwtHelper(JwtHelper jwtHelper) {
-        this.jwtHelper = jwtHelper;
-    }
 
     //登录操作
     @Override
@@ -73,12 +64,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     @Override
     public boolean addAdmin(Admin admin){
         //设置删除状态
-        admin.setIsDeleted(NO_DELETE);
+        admin.setIsDeleted(NO_DELETE.getCode());
         //密码加密
         String passwordEncry = MD5Util.encrypt(admin.getPassword());
         admin.setPassword(passwordEncry);
-        //添加创建时间
-        admin.setCreateTime(new Date());
         //通过mapper层增添数据
         adminMapper.addAdmin(admin);
         //判断是否添加成功
@@ -93,12 +82,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     @Override
     public boolean deleteAdmin(String adminName) {
         //设置删除状态
-        int isDeleted = IS_DELETE;
+        int isDeleted = NO_DELETE.getCode();
         //通过mapper层进行删除
         adminMapper.deleteByAdminName(adminName,isDeleted,new Date());
         //判断是否删除
         Admin isDelete = adminMapper.getByAdminName(adminName);
-        if (isDelete.getIsDeleted().equals(IS_DELETE)){
+        if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
             //删除成功
             return true;
         }
@@ -107,8 +96,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
     @Override
     public boolean updateAdmin(Admin admin) {
-        //添加更新时间
-        admin.setUpdateTime(new Date());
+        admin.setPassword(MD5Util.encrypt(admin.getPassword()));
         //通过mapper层进行修改
         adminMapper.updateByAdminName(admin);
         return true;

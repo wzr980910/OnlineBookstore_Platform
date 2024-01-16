@@ -6,6 +6,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created with Intellij IDEA.
@@ -23,18 +24,15 @@ public class DateInterceptor implements MetaObjectHandler {
     private final String TIME_UPDATE = "updateTime";
     @Override
     public void insertFill(MetaObject metaObject) {
-
         //添加时间、最后更新时间
-        this.strictInsertFill(metaObject, TIME_CREATE, LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, TIME_UPDATE, LocalDateTime.class, LocalDateTime.now());
+        this.setFieldValByName(TIME_CREATE, new Date(), metaObject);
+        this.setFieldValByName(TIME_UPDATE, new Date(), metaObject);
 
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-
         //最后更新时间
-        this.strictInsertFill(metaObject, TIME_UPDATE, LocalDateTime.class, LocalDateTime.now());
-
+        this.setFieldValByName(TIME_UPDATE, new Date(), metaObject);
     }
 }
