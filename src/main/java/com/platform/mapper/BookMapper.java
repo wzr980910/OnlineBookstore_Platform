@@ -4,6 +4,8 @@ import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
+
 /**
 * @author 邓桂材
 * @description 针对表【book(图书表)】的数据库操作Mapper
@@ -13,6 +15,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BookMapper extends BaseMapper<Book> {
 
+    Book getBookByISBN(String ISBN);
+
+    void addBook(Book book);
+
+
+    void deleteByISBN(String ISBN, Date updateTime);
 }
 
 

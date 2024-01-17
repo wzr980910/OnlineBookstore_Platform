@@ -26,9 +26,9 @@ import static com.platform.util.result.ResultCode.*;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    private AdminService adminService;
+
     @Autowired
-    public AdminController(AdminService adminService){this.adminService = adminService;}
+    private AdminService adminService;
 
     //管理员账号添加
 

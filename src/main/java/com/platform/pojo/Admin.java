@@ -12,7 +12,7 @@ import lombok.Data;
 @TableName(value ="admin")
 @Data
 public class Admin implements Serializable {
-    private Integer id;
+    private Long id;
 
     private String adminName;
 

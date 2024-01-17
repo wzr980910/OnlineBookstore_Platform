@@ -2,6 +2,7 @@ package com.platform.service;
 
 import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.vo.BookVo;
 
 /**
 * @author 邓桂材
@@ -10,4 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface BookService extends IService<Book> {
 
+    //通过ISBN查询图书
+    Book getBookByISBN(String ISBN);
+
+    //添加图书
+    boolean addBook(BookVo bookVo);
+
+
+    //删除图书
+    boolean deleteByISBN(String ISBN);
 }

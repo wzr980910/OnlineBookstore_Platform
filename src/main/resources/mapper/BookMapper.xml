@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.platform.pojo.Book">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="ISBN" column="ISBN" jdbcType="VARCHAR"/>
             <result property="bookName" column="bookName" jdbcType="VARCHAR"/>
             <result property="author" column="author" jdbcType="VARCHAR"/>
             <result property="publishId" column="publishId" jdbcType="BIGINT"/>
@@ -13,16 +14,42 @@
             <result property="price" column="price" jdbcType="DECIMAL"/>
             <result property="picture" column="picture" jdbcType="VARCHAR"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="typeId" column="typeId" jdbcType="INTEGER"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDeleted" column="isDeleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,bookName,author,
+        id,ISBN,bookName,author,
         publishId,publishDate,price,
-        picture,content,typeId,
+        picture,content,
         createTime,updateTime,isDeleted
     </sql>
+
+    <resultMap id="bookName" type="com.platform.pojo.Book">
+        <result property="bookName" column="bookName" jdbcType="VARCHAR"/>
+       </resultMap>
+    <select id="getBookByISBN" resultMap="bookName">
+        select id,bookName from book where ISBN = #{ISBN}
+    </select>
+
+    <insert id="addBook">
+        insert into book (ISBN,bookName,author,publishId,publishDate,price,picture,content,
+                          createTime,isDeleted) values (#{ISBN},#{bookName},#{author},#{publishId},
+                                                        #{publishDate},#{price},#{picture},#{content},#{createTime},#{isDeleted})
+    </insert>
+
+    <update id="deleteByISBN">
+        update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where ISBN = #{ISBN}
+    </update>
+
+    <!--修改图书-->
+
+
+    <!--查询全部图书-->
+
+
+
+    <!--根据条件查询图书-->
+
 </mapper>

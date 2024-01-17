@@ -28,6 +28,8 @@ public class BookVo {
 
     private String publishDate;
 
+    private BigDecimal price;
+
     private BigDecimal priceLow = BigDecimal.ZERO;
 
     private BigDecimal priceHigh;
@@ -36,7 +38,7 @@ public class BookVo {
 
     private String content;
 
-    private Integer typeId;
+    private Long typeId;
 
     private Date createTime;
 

@@ -5,9 +5,9 @@
 <mapper namespace="com.platform.mapper.TypeMapper">
 
     <resultMap id="BaseResultMap" type="com.platform.pojo.Type">
-            <id property="id" column="id" jdbcType="INTEGER"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="parentId" column="parentId" jdbcType="INTEGER"/>
+            <result property="parentId" column="parentId" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">

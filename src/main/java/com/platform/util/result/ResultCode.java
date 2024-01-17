@@ -52,7 +52,10 @@ public enum ResultCode {
     ASSERT_ERROR(3022,"断言异常"),
     FILE_UPLOAD_FAILURE(3013,"文件上传失败"),
     /* 数据库错误：4001-4099*/
-    DB_INSERT_ERROR(4001,"数据库插入报错");
+    DB_INSERT_ERROR(4001,"数据库插入报错"),
+
+    //图书相关编码
+    BOOK_HAS_EXISTED(5001,"图书已存在");
 
     private Integer code;
     private String message;

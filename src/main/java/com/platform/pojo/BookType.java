@@ -8,16 +8,16 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * @TableName type
+ * @TableName book_type
  */
-@TableName(value ="type")
+@TableName(value ="book_type")
 @Data
-public class Type implements Serializable {
+public class BookType implements Serializable {
     private Long id;
 
-    private String type;
+    private Long bookId;
 
-    private Long parentId;
+    private Long typeId;
 
     private static final long serialVersionUID = 1L;
 }

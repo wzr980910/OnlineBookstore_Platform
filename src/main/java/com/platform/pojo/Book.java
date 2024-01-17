@@ -16,6 +16,8 @@ public class Book implements Serializable {
 
     private Long id;
 
+    private String ISBN;
+
     private String bookName;
 
     private String author;
@@ -29,8 +31,6 @@ public class Book implements Serializable {
     private String picture;
 
     private String content;
-
-    private Integer typeId;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
