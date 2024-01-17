@@ -2,6 +2,7 @@ package com.platform.mapper;
 
 import com.platform.pojo.BookType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,7 +14,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BookTypeMapper extends BaseMapper<BookType> {
 
-    void addBookType(BookType bookType);
+    void addBookType(BookVo bookVo);
+
+    void updateBookType(BookVo bookVo);
 }
 
 

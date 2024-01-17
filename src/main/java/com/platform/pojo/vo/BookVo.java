@@ -22,6 +22,8 @@ public class BookVo {
 
     private String bookName;
 
+    private String ISBN;
+
     private String author;
 
     private Long publishId;

@@ -43,7 +43,11 @@
         update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where ISBN = #{ISBN}
     </update>
 
-    <!--修改图书-->
+    <!--修改图书信息-->
+    <update id="updateBook">
+        update book set bookName = #{bookName}, author = #{author}, publishId = #{publishId}, publishDate = #{publishDate}, price = #{price},
+                        picture = #{picture}, content = #{content}, updateTime = #{updateTime}, isDeleted = #{isDeleted} where ISBN = #{ISBN}
+    </update>
 
 
     <!--查询全部图书-->

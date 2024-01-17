@@ -53,24 +53,24 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
             isOnly = getBookByISBN(bookISBN);
         }
         //添加图书信息
-        book.setISBN(bookISBN);
+        /*book.setISBN(bookISBN);
         book.setBookName(bookVo.getBookName());
         book.setAuthor(bookVo.getAuthor());
         book.setPublishId(bookVo.getPublishId());
         book.setPublishDate(bookVo.getPublishDate());
         book.setPrice(bookVo.getPrice());
         book.setPicture(bookVo.getPicture());
-        book.setContent(bookVo.getContent());
-        book.setIsDeleted(NO_DELETE.getCode());
+        book.setContent(bookVo.getContent());*/
+        bookVo.setIsDeleted(NO_DELETE.getCode());
         //通过mapper层增添数据
-        bookMapper.addBook(book);
+        bookMapper.addBook(bookVo);
         //判断是否添加成功
-        Book isExisted = bookMapper.getBookByISBN(book.getISBN());
+        Book isExisted = bookMapper.getBookByISBN(bookVo.getISBN());
         if (isExisted != null){
             //添加成功,将图书与类型信息添加到book_type表中
-            bookType.setBookId(bookMapper.getBookByISBN(bookISBN).getId());
-            bookType.setTypeId(bookVo.getTypeId());
-            bookTypeMapper.addBookType(bookType);
+            /*bookType.setBookId(bookMapper.getBookByISBN(bookISBN).getId());
+            bookType.setTypeId(bookVo.getTypeId());*/
+            bookTypeMapper.addBookType(bookVo);
             return true;
         }
         return false;
@@ -93,6 +93,30 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     //修改图书
+    @Override
+    public boolean updateBook(BookVo bookVo) {
+        /*Book book = null;
+        BookType bookType = null;
+        //获取Book类数据
+        book.setISBN(book.getISBN());
+        book.setBookName(bookVo.getBookName());
+        book.setAuthor(bookVo.getAuthor());
+        book.setPublishId(bookVo.getPublishId());
+        book.setPublishDate(bookVo.getPublishDate());
+        book.setPrice(bookVo.getPrice());
+        book.setPicture(bookVo.getPicture());
+        book.setContent(bookVo.getContent());*/
+        bookVo.setIsDeleted(NO_DELETE.getCode());
+        bookMapper.updateBook(bookVo);
+        //获取bookType数据,修改图书类型
+        /*bookType.setBookId(bookMapper.getBookByISBN(book.getISBN()).getId());
+        bookType.setTypeId(bookVo.getTypeId());*/
+        bookTypeMapper.updateBookType(bookVo);
+        //修改成功
+        return true;
+    }
+
+
 
 }
 

@@ -3,7 +3,6 @@ package com.platform.controller;
 import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import com.platform.service.BookService;
-import com.platform.util.CreateISBNUtil;
 import com.platform.util.result.RestResult;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-
     //添加图书信息,获取BookVo实体类,将BookVo实体类中的数据分为Book实体类和book_type实体类存入数据库
     @PostMapping("/addBook")
     public RestResult addBook(@RequestBody BookVo bookVo){
@@ -47,7 +45,7 @@ public class BookController {
     @PostMapping("/deleteBook")
     public RestResult deleteBook (@RequestParam String ISBN){
         RestResult restResult = null;
-        //删除账号
+        //删除图书
         boolean isDeleted = bookService.deleteByISBN(ISBN);
         if (isDeleted){
             //删除成功
@@ -59,6 +57,23 @@ public class BookController {
         return restResult;
     }
 
+    //修改图书,获取BookVo实体类
+    @PostMapping("/updateBook")
+    public RestResult updateBook(@RequestBody BookVo bookVo){
+        RestResult restResult = null;
+        //将bookVo传入service层进行处理
+        boolean isUpdate = bookService.updateBook(bookVo);
+        if (isUpdate){
+            //修改成功
+            restResult =  RestResult.success();
+        }else {
+            //修改失败
+            restResult = RestResult.failure(OPERATION_FAILURE);
+        }
+        return restResult;
+    }
+
+    //查询图书
 
 
 }

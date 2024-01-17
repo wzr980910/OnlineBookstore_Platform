@@ -2,6 +2,7 @@ package com.platform.mapper;
 
 import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -17,10 +18,11 @@ public interface BookMapper extends BaseMapper<Book> {
 
     Book getBookByISBN(String ISBN);
 
-    void addBook(Book book);
-
+    void addBook(BookVo bookVo);
 
     void deleteByISBN(String ISBN, Date updateTime);
+
+    void updateBook(BookVo bookVo);
 }
 
 
