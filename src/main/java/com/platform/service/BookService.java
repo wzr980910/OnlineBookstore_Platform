@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.BookVo;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
 * @author 邓桂材
 * @description 针对表【book(图书表)】的数据库操作Service
@@ -25,4 +27,7 @@ public interface BookService extends IService<Book> {
 
     //修改图书
     boolean updateBook(BookVo bookVo);
+
+    //根据条件查询图书
+    Map<String,Object> selectBookPage(BookVo bookVo);
 }

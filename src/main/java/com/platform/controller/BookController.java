@@ -4,9 +4,12 @@ import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import com.platform.service.BookService;
 import com.platform.util.result.RestResult;
+import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static com.platform.util.result.ResultCode.*;
 
@@ -73,7 +76,13 @@ public class BookController {
         return restResult;
     }
 
-    //查询图书
-
-
+    //根据条件查询图书
+    @PostMapping("/selectBook")
+    public RestResult selectBook(@RequestBody BookVo bookVo){
+        RestResult restResult=null;
+        Map<String,Object> map=bookService.selectBookPage(bookVo);
+        //查询成功，包装数据返回
+        restResult=new RestResult(ResultCode.SUCCESS,map);
+        return restResult;
+    }
 }

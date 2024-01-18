@@ -20,31 +20,38 @@
         isDeleted
     </sql>
 
+    <!--登录-->
     <select id="login" resultType="com.platform.pojo.Admin">
         select id,adminName,level from admin where adminName = #{adminName} and password = #{password}
     </select>
 
+    <!--通过adminName获取数据-->
     <select id="getByAdminName" resultType="com.platform.pojo.Admin">
         select adminName,isDeleted from admin where adminName = #{adminName}
     </select>
 
+    <!--添加管理员-->
     <insert id="addAdmin">
         insert into admin (adminName,password,level,createTime,isDeleted) values (#{adminName},#{password},#{level},#{createTime},#{isDeleted})
     </insert>
 
+    <!--删除管理员-->
     <delete id="deleteByAdminName">
         update admin set isDeleted = #{isDeleted},updateTime = #{updateTime} where adminName = #{adminName}
     </delete>
 
+    <!--更新管理员信息-->
     <update id="updateByAdminName">
         update admin set password = #{password},level = #{level}, updateTime = #{updateTime}, isDeleted = #{isDeleted} where adminName = #{adminName}
     </update>
 
-    <select id="selectAdmin" resultType="com.platform.pojo.Admin">
-        select adminName ,level ,isDeleted from admin where adminName = #{adminName}
-    </select>
-
-    <select id="selectAllAdmin" resultType="com.platform.pojo.Admin">
+    <!--根据adminName模糊查询管理员-->
+    <select id="selectAdmin" resultType="com.platform.pojo.vo.AdminVo">
         select adminName ,level ,isDeleted from admin
+        <where>
+            <if test="adminVo.adminName != null">
+                adminName like CONCAT('%',#{adminVo.adminVo},'%')
+            </if>
+        </where>
     </select>
 </mapper>

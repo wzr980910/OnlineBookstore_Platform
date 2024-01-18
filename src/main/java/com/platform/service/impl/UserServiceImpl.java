@@ -2,6 +2,7 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.platform.pojo.Admin;
 import com.platform.pojo.User;
 import com.platform.service.UserService;
 import com.platform.mapper.UserMapper;
@@ -11,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.CoderResult;
+import java.util.Date;
+
+import static com.platform.common.DeleteState.IS_DELETE;
+import static com.platform.common.DeleteState.NO_DELETE;
 
 /**
  * @author 邓桂材
@@ -20,6 +25,8 @@ import java.nio.charset.CoderResult;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+
+    @Autowired
     private UserMapper userMapper;
 
 
@@ -56,6 +63,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //通过用户名和加密后的密码查找用户
         User user = userMapper.selectOne(wrapper);
         return user;
+    }
+
+    @Override
+    public boolean deleteByNumber(String accountNumber) {
+        //设置删除状态
+        int isDeleted = NO_DELETE.getCode();
+        //通过mapper层进行删除
+        userMapper.deleteByNumber(accountNumber,isDeleted,new Date());
+        //判断是否删除
+        User isDelete = userMapper.getByNumber(accountNumber);
+        if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
+            //删除成功
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        //新密码进行加密
+        String passwordEncy = MD5Util.encrypt(user.getPassword());
+        user.setPassword(passwordEncy);
+        userMapper.updateUser(user);
+        //修改成功
+        return true;
     }
 
 

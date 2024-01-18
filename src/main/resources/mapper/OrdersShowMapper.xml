@@ -13,11 +13,13 @@
             <result property="toShoppingAddress" column="toShoppingAddress" jdbcType="VARCHAR"/>
             <result property="contact" column="contact" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="DATE"/>
+            <result property="updateTime" column="updateTime" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,orderId,accountNumber,
         date,totalPrice,toShoppingAddress,
-        contact,status
+        contact,status,createTime,updateTime
     </sql>
 </mapper>

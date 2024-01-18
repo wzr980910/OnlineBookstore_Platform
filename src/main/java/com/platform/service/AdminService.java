@@ -2,9 +2,11 @@ package com.platform.service;
 
 import com.platform.pojo.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.vo.AdminVo;
 import com.platform.util.result.RestResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author wzr
@@ -28,9 +30,7 @@ public interface AdminService extends IService<Admin> {
     //修改管理员账号
     boolean updateAdmin(Admin admin);
 
-    //查找单个账号
-    Admin selectAdmin(String adminName);
+    //条件查找账号
+    Map<String,Object> selectAdmin(AdminVo adminVo);
 
-    //查找全部账号
-    List<Admin> selectAllAdmin();
 }

@@ -1,7 +1,11 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.Book;
+import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -25,9 +29,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     void updateByAdminName(Admin admin);
 
-    Admin selectAdmin(String adminName);
-
-    List<Admin> selectAllAdmin();
+    IPage<Admin> selectAdmin(IPage<?> page, AdminVo adminVo);
 }
 
 

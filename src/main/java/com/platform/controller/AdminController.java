@@ -1,8 +1,10 @@
 package com.platform.controller;
 
 import com.platform.pojo.Admin;
+import com.platform.pojo.vo.AdminVo;
 import com.platform.service.AdminService;
 import com.platform.util.result.RestResult;
+import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 
 import static com.platform.util.result.ResultCode.*;
 
@@ -92,34 +95,14 @@ public class AdminController {
         return restResult;
     }
 
-
     //管理员账号信息查询
     @PostMapping("/selectAdmin")
-    public RestResult selectAdmin(@RequestParam String adminName){
+    public RestResult selectAdmin(AdminVo adminVo){
         RestResult restResult = null;
-        Admin admin = adminService.selectAdmin(adminName);
-        if(admin != null) {
-            //查找成功
-            restResult = RestResult.success(admin);
-        }else {
-            //查找失败
-            restResult = RestResult.failure(USER_NOT_EXIST);
-        }
+        Map<String,Object> map = adminService.selectAdmin(adminVo);
+        //查询成功，包装数据返回
+        restResult=new RestResult(ResultCode.SUCCESS,map);
         return restResult;
     }
 
-    //管理员账号信息查询(全部)
-    @PostMapping("/selectAllAdmin")
-    public RestResult selectAllAdmin(){
-        RestResult restResult = null;
-        List<Admin> adminList = adminService.selectAllAdmin();
-        if (adminList != null){
-            //查找成功
-            restResult = RestResult.success(adminList);
-        }else{
-            //查找失败
-            restResult = RestResult.failure(OPERATION_FAILURE);
-        }
-        return restResult;
-    }
 }

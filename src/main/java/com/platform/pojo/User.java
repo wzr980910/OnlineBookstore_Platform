@@ -1,10 +1,10 @@
 package com.platform.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -33,6 +33,18 @@ public class User implements Serializable {
     @NotBlank(message="手机号不能为空")
     @Pattern(regexp="^1\\d{10}$", message="请输入正确的手机格式")
     private String phoneNumber;
+
+    private String picture;
+
+    private Long gender;
+
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+
+    @TableField(fill = FieldFill.UPDATE)
+    private Date updateTime;
+
+    private Integer isDeleted;
 
     private static final long serialVersionUID = 1L;
 }

@@ -1,7 +1,10 @@
 package com.platform.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.pojo.Admin;
+import com.platform.pojo.Book;
+import com.platform.pojo.vo.AdminVo;
 import com.platform.service.AdminService;
 import com.platform.mapper.AdminMapper;
 import com.platform.util.JwtHelper;
@@ -102,15 +105,28 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         return true;
     }
 
+    //根据条件查询
     @Override
-    public Admin selectAdmin(String adminName) {
-        //通过mapper层进行查询
-        return adminMapper.selectAdmin(adminName);
-    }
-
-    @Override
-    public List<Admin> selectAllAdmin() {
-        return adminMapper.selectAllAdmin();
+    public Map<String, Object> selectAdmin(AdminVo adminVo) {
+        //分页
+        Page<Admin> page = new Page<>(adminVo.getPageNum(), adminVo.getPageSize());
+        //查询
+        adminMapper.selectAdmin(page, adminVo);
+        //封装查询到的内容
+        Map<String, Object> pageInfo = new HashMap<>();
+        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
+        pageInfo.put("pageData", page.getRecords());
+        //从page中返回当前是第几页
+        pageInfo.put("pageNum", page.getCurrent());
+        //从page中返回当前页容量
+        pageInfo.put("pageSize", page.getSize());
+        //返回总页数
+        pageInfo.put("totalPage", page.getPages());
+        //返回结果总条数
+        pageInfo.put("totalSize", page.getTotal());
+        Map<String, Object> pageInfoMap = new HashMap<>();
+        pageInfoMap.put("pageInfo", pageInfo);
+        return pageInfoMap;
     }
 }
 

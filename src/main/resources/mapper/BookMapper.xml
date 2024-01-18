@@ -55,5 +55,40 @@
 
 
     <!--根据条件查询图书-->
+    <select id="selectBookPage" resultType="com.platform.pojo.vo.BookVo">
+        select distinct book.* from book
+        <!-- 如果出版社名或者图书类型名不为空，需要联表查询-->
+        <trim>
+            <if test="bookVo.publishName != null">
+                left join publishing_house on book.publishId =publishing_house.id
+            </if>
+            <if test="bookVo.type != null">
+                LEFT JOIN book_type ON book.id=book_type.bookId
+                LEFT JOIN TYPE t1 ON book_type.typeId=t1.id
+                LEFT JOIN TYPE t2 ON t1.parentId=t2.id
+            </if>
+        </trim>
+        <where>
+            <if test="bookVo.bookName != null">
+                bookName like CONCAT('%',#{bookVo.bookName},'%')
+            </if>
+            <if test="bookVo.author != null">
+                and author like '%' || #{bookVo.author} || '%'
+            </if>
+            <if test="bookVo.priceHigh != null">
+                and price between #{bookVo.priceLow} and #{bookVo.priceHigh}
+            </if>
+            <if test="bookVo.priceHigh == null">
+                and price &gt;= #{bookVo.priceLow}
+            </if>
+            <if test="bookVo.publishName != null">
+                and publishing_house.publishName=#{bookVo.publishName}
+            </if>
+            <if test="bookVo.type != null">
+                and (t1.type=#{bookVo.type} OR t2.type=#{bookVo.type})
+            </if>
+            limit #{pageNum},#{pageSize}
+        </where>
+    </select>
 
 </mapper>

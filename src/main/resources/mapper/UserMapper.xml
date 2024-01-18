@@ -10,10 +10,34 @@
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="username" column="userName" jdbcType="VARCHAR"/>
             <result property="phoneNumber" column="phoneNumber" jdbcType="VARCHAR"/>
+            <result property="picture" column="picture" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="BIGINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="isDeleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,accountNumber,password,
-        userName,phoneNumber
+        userName,phoneNumber,picture,gender,
+        createTime,updateTime,isDeleted
     </sql>
+
+    <!--根据accountNumber查询-->
+    <select id="getByNumber" resultType="com.platform.pojo.User">
+        select accountNumber,isDeleted from user where accountNumber = #{accountNumber}
+    </select>
+
+    <!--删除-->
+    <update id="deleteByNumber">
+        update user set isDeleted = #{isDeleted},updateTime = #{updateTime} where accountNumber = #{accountNumber}
+
+    </update>
+
+    <!--更新信息-->
+    <update id="updateUser">
+        update user set password=#{password},userName=#{userName},
+                        phoneNumber=#{phoneNumber},picture=#{picture},gender=#{gender},updateTime=#{updateTime},
+                        isDeleted=#{isDeleted} where accountNumber = #{accountNumber}
+    </update>
 </mapper>

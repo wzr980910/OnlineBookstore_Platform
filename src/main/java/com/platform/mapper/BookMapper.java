@@ -1,5 +1,7 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.BookVo;
@@ -23,6 +25,8 @@ public interface BookMapper extends BaseMapper<Book> {
     void deleteByISBN(String ISBN, Date updateTime);
 
     void updateBook(BookVo bookVo);
+
+    IPage<Book> selectBookPage(IPage<?> page, BookVo bookVo);
 }
 
 

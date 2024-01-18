@@ -1,5 +1,6 @@
 package com.platform.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.mapper.BookTypeMapper;
 import com.platform.pojo.Admin;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
@@ -52,15 +55,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
             bookISBN = CreateISBNUtil.createISBN();
             isOnly = getBookByISBN(bookISBN);
         }
-        //添加图书信息
-        /*book.setISBN(bookISBN);
-        book.setBookName(bookVo.getBookName());
-        book.setAuthor(bookVo.getAuthor());
-        book.setPublishId(bookVo.getPublishId());
-        book.setPublishDate(bookVo.getPublishDate());
-        book.setPrice(bookVo.getPrice());
-        book.setPicture(bookVo.getPicture());
-        book.setContent(bookVo.getContent());*/
         bookVo.setIsDeleted(NO_DELETE.getCode());
         //通过mapper层增添数据
         bookMapper.addBook(bookVo);
@@ -68,8 +62,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         Book isExisted = bookMapper.getBookByISBN(bookVo.getISBN());
         if (isExisted != null){
             //添加成功,将图书与类型信息添加到book_type表中
-            /*bookType.setBookId(bookMapper.getBookByISBN(bookISBN).getId());
-            bookType.setTypeId(bookVo.getTypeId());*/
             bookTypeMapper.addBookType(bookVo);
             return true;
         }
@@ -95,27 +87,35 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     //修改图书
     @Override
     public boolean updateBook(BookVo bookVo) {
-        /*Book book = null;
-        BookType bookType = null;
-        //获取Book类数据
-        book.setISBN(book.getISBN());
-        book.setBookName(bookVo.getBookName());
-        book.setAuthor(bookVo.getAuthor());
-        book.setPublishId(bookVo.getPublishId());
-        book.setPublishDate(bookVo.getPublishDate());
-        book.setPrice(bookVo.getPrice());
-        book.setPicture(bookVo.getPicture());
-        book.setContent(bookVo.getContent());*/
-        bookVo.setIsDeleted(NO_DELETE.getCode());
         bookMapper.updateBook(bookVo);
         //获取bookType数据,修改图书类型
-        /*bookType.setBookId(bookMapper.getBookByISBN(book.getISBN()).getId());
-        bookType.setTypeId(bookVo.getTypeId());*/
         bookTypeMapper.updateBookType(bookVo);
         //修改成功
         return true;
     }
 
+    @Override
+    public Map<String, Object> selectBookPage(BookVo bookVo) {
+        //分页
+        Page<Book> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
+        //查询
+        bookMapper.selectBookPage(page, bookVo);
+        //封装查询到的内容
+        Map<String, Object> pageInfo = new HashMap<>();
+        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
+        pageInfo.put("pageData", page.getRecords());
+        //从page中返回当前是第几页
+        pageInfo.put("pageNum", page.getCurrent());
+        //从page中返回当前页容量
+        pageInfo.put("pageSize", page.getSize());
+        //返回总页数
+        pageInfo.put("totalPage", page.getPages());
+        //返回结果总条数
+        pageInfo.put("totalSize", page.getTotal());
+        Map<String, Object> pageInfoMap = new HashMap<>();
+        pageInfoMap.put("pageInfo", pageInfo);
+        return pageInfoMap;
+    }
 
 
 }

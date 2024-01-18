@@ -17,4 +17,8 @@ public interface UserService extends IService<User> {
 
     User login(String username, String password);
 
+    boolean deleteByNumber(String accountNumber);
+
+    boolean updateUser(User user);
+
 }
