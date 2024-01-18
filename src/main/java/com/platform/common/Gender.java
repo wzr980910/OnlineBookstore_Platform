@@ -4,25 +4,23 @@ package com.platform.common;
  * Created with Intellij IDEA.
  *
  * @Author: wzr
- * @Date: 2024/01/16/11:02
- * @Description:删除状态码
+ * @Date: 2024/01/18/10:40
+ * @Description:性别集合类
  */
-public enum DeleteState {
-    /*未删除*/
-    NO_DELETE(0),
-    /*已删除*/
-    IS_DELETE(1);
+public enum Gender {
+    /*性别男*/
+    MALE(1),
+    /*性别女*/
+    FEMALE(2);
 
 
     private Integer code;
 
-    DeleteState(Integer code) {
+    Gender(Integer code) {
         this.code = code;
     }
 
     public Integer getCode() {
         return this.code;
     }
-
-
 }

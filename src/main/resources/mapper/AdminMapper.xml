@@ -50,8 +50,14 @@
         select adminName ,level ,isDeleted from admin
         <where>
             <if test="adminVo.adminName != null">
-                adminName like CONCAT('%',#{adminVo.adminVo},'%')
+                adminName like CONCAT('%',#{adminVo.adminName},'%')
             </if>
+            <if test="adminVo.authority != null">
+                authority = #{adminVo.authority}
+            </if>
+            <if test="adminVo.isDeleted != null">
+                isDeleted = #{isDeleted}
+            </if>>
         </where>
     </select>
 </mapper>

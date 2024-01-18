@@ -1,9 +1,11 @@
 package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.pojo.Admin;
 import com.platform.pojo.User;
+import com.platform.pojo.vo.UserVo;
 import com.platform.service.UserService;
 import com.platform.mapper.UserMapper;
 import com.platform.util.JwtHelper;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.CoderResult;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
@@ -88,6 +92,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userMapper.updateUser(user);
         //修改成功
         return true;
+    }
+
+    @Override
+    public Map<String, Object> selectUser(UserVo userVo) {
+        //分页
+        Page<Admin> page = new Page<>(userVo.getPageNum(), userVo.getPageSize());
+        //查询
+        userMapper.selectUser(page, userVo);
+        //封装查询到的内容
+        Map<String, Object> pageInfo = new HashMap<>();
+        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
+        pageInfo.put("pageData", page.getRecords());
+        //从page中返回当前是第几页
+        pageInfo.put("pageNum", page.getCurrent());
+        //从page中返回当前页容量
+        pageInfo.put("pageSize", page.getSize());
+        //返回总页数
+        pageInfo.put("totalPage", page.getPages());
+        //返回结果总条数
+        pageInfo.put("totalSize", page.getTotal());
+        Map<String, Object> pageInfoMap = new HashMap<>();
+        pageInfoMap.put("pageInfo", pageInfo);
+        return pageInfoMap;
     }
 
 

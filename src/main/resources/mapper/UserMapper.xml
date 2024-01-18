@@ -40,4 +40,26 @@
                         phoneNumber=#{phoneNumber},picture=#{picture},gender=#{gender},updateTime=#{updateTime},
                         isDeleted=#{isDeleted} where accountNumber = #{accountNumber}
     </update>
+
+    <!--根据条件模糊查询-->
+    <select id="selectUser" resultType="com.platform.pojo.vo.UserVo">
+        select * form user
+        <where>
+            <if test="userVo.accountNumber != null">
+                accountNumber like CONCAT('%',#{userVo.accountNumber},'%')
+            </if>>
+            <if test="userVo.userName != null">
+                userName like CONCAT('%',#{userVo.userName},'%')
+            </if>>
+            <if test="userVo.gender != null">
+                gender = #{userVo.gender}
+            </if>>
+            <if test="userVo.phoneNumber != null">
+                phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')
+            </if>>
+            <if test="userVo.isDeleted != null">
+                isDeleted = #{userVo.isDeleted}
+            </if>>
+        </where>>
+    </select>
 </mapper>

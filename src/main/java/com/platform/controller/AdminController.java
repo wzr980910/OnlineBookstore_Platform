@@ -97,7 +97,7 @@ public class AdminController {
 
     //管理员账号信息查询
     @PostMapping("/selectAdmin")
-    public RestResult selectAdmin(AdminVo adminVo){
+    public RestResult selectAdmin(@RequestBody AdminVo adminVo){
         RestResult restResult = null;
         Map<String,Object> map = adminService.selectAdmin(adminVo);
         //查询成功，包装数据返回

@@ -2,12 +2,16 @@ package com.platform.controller;
 
 
 import com.platform.pojo.User;
+import com.platform.pojo.vo.UserVo;
 import com.platform.util.result.RestResult;
 import com.platform.service.UserService;
+import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.Map;
 
 import static com.platform.util.result.ResultCode.OPERATION_FAILURE;
 
@@ -51,5 +55,12 @@ public class UserController {
     }
 
     //用户条件查找
-
+    @PostMapping("/selectUser")
+    public RestResult selectUser(@RequestBody UserVo userVo){
+        RestResult restResult = null;
+        Map<String,Object> map = userService.selectUser(userVo);
+        //查询成功，包装数据返回
+        restResult=new RestResult(ResultCode.SUCCESS,map);
+        return restResult;
+    }
 }

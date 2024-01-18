@@ -26,7 +26,7 @@ public class AdminVo {
 
     private String password;
 
-    private Integer level;
+    private Integer authority;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

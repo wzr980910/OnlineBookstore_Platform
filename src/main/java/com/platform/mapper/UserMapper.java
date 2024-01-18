@@ -1,7 +1,11 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.platform.pojo.Admin;
 import com.platform.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -23,6 +27,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     //更新用户信息
     void updateUser(User user);
+
+    IPage<Admin> selectUser(IPage<?> page, UserVo userVo);
 }
 
 

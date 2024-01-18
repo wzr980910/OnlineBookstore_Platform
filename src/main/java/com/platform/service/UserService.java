@@ -2,8 +2,11 @@ package com.platform.service;
 
 import com.platform.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.UserVo;
 
 import java.nio.charset.CoderResult;
+import java.util.Map;
 
 /**
  * @author 邓桂材
@@ -17,8 +20,12 @@ public interface UserService extends IService<User> {
 
     User login(String username, String password);
 
+    //删除
     boolean deleteByNumber(String accountNumber);
 
+    //更新
     boolean updateUser(User user);
 
+    //查询
+    Map<String,Object> selectUser(UserVo userVo);
 }

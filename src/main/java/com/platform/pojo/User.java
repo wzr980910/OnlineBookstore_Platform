@@ -36,7 +36,7 @@ public class User implements Serializable {
 
     private String picture;
 
-    private Long gender;
+    private Integer gender;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
