@@ -44,21 +44,37 @@ public class BookController {
         return restResult;
     }
 
-    //删除图书信息
+    //下架图书
     @PostMapping("/deleteBook")
     public RestResult deleteBook (@RequestParam String ISBN){
         RestResult restResult = null;
-        //删除图书
+        //下架图书
         boolean isDeleted = bookService.deleteByISBN(ISBN);
         if (isDeleted){
-            //删除成功
+            //下架成功
             restResult =  RestResult.success();
         }else {
-            //删除失败
+            //下架失败
             restResult = RestResult.failure(OPERATION_FAILURE);
         }
         return restResult;
     }
+
+    //上架图书
+    /*@PostMapping("/deleteBook")
+    public RestResult deleteBook (@RequestParam String ISBN){
+        RestResult restResult = null;
+        //下架图书
+        boolean isDeleted = bookService.deleteByISBN(ISBN);
+        if (isDeleted){
+            //下架成功
+            restResult =  RestResult.success();
+        }else {
+            //下架失败
+            restResult = RestResult.failure(OPERATION_FAILURE);
+        }
+        return restResult;
+    }*/
 
     //修改图书,获取BookVo实体类
     @PostMapping("/updateBook")

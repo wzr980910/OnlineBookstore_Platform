@@ -32,7 +32,8 @@
 
     <!--添加管理员-->
     <insert id="addAdmin">
-        insert into admin (adminName,password,level,createTime,isDeleted) values (#{adminName},#{password},#{level},#{createTime},#{isDeleted})
+        insert into admin (adminName,password,authority,createTime,isDeleted) values (#{admin.adminName},#{admin.password},
+                                                                                  #{admin.authority},#{admin.createTime},#{admin.isDeleted})
     </insert>
 
     <!--删除管理员-->
@@ -42,22 +43,23 @@
 
     <!--更新管理员信息-->
     <update id="updateByAdminName">
-        update admin set password = #{password},level = #{level}, updateTime = #{updateTime}, isDeleted = #{isDeleted} where adminName = #{adminName}
+        update admin set password = #{admin.password},authority = #{admin.authority}, updateTime = #{admin.updateTime}, isDeleted = #{admin.isDeleted} where adminName = #{admin.adminName}
     </update>
 
     <!--根据adminName模糊查询管理员-->
     <select id="selectAdmin" resultType="com.platform.pojo.vo.AdminVo">
-        select adminName ,level ,isDeleted from admin
+        select adminName ,authority ,isDeleted from admin
         <where>
             <if test="adminVo.adminName != null">
                 adminName like CONCAT('%',#{adminVo.adminName},'%')
             </if>
             <if test="adminVo.authority != null">
-                authority = #{adminVo.authority}
+                and authority = #{adminVo.authority}
             </if>
             <if test="adminVo.isDeleted != null">
-                isDeleted = #{isDeleted}
+                and isDeleted = #{adminVo.isDeleted}
             </if>>
+            limit #{adminVo.pageNum},#{adminVo.pageSize}
         </where>
     </select>
 </mapper>

@@ -72,9 +72,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     @Override
     public boolean deleteByISBN(String ISBN) {
         //设置删除状态
-        int isDeleted = NO_DELETE.getCode();
+        Integer isDeleted = NO_DELETE.getCode();
         //通过mapper层进行删除
-        bookMapper.deleteByISBN(ISBN,new Date());
+        bookMapper.deleteByISBN(ISBN,isDeleted,new Date());
         //判断是否删除
         Book isDelete = bookMapper.getBookByISBN(ISBN);
         if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){

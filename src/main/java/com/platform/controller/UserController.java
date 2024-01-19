@@ -25,7 +25,7 @@ public class UserController {
 
     //用户账号删除
     @PostMapping("/deleteUser")
-    public RestResult deleteUser(@RequestParam String accountNumber){
+    public RestResult deleteUser(@RequestParam(value = "accountNumber",required = false) String accountNumber){
         RestResult restResult = null;
         //删除图书
         boolean isDeleted = userService.deleteByNumber(accountNumber);

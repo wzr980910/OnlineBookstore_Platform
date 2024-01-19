@@ -43,23 +43,24 @@
 
     <!--根据条件模糊查询-->
     <select id="selectUser" resultType="com.platform.pojo.vo.UserVo">
-        select * form user
+        select * from user
         <where>
             <if test="userVo.accountNumber != null">
                 accountNumber like CONCAT('%',#{userVo.accountNumber},'%')
-            </if>>
+            </if>
             <if test="userVo.userName != null">
-                userName like CONCAT('%',#{userVo.userName},'%')
-            </if>>
+                and userName like CONCAT('%',#{userVo.userName},'%')
+            </if>
             <if test="userVo.gender != null">
-                gender = #{userVo.gender}
-            </if>>
+                and gender = CONCAT('%',#{userVo.gender},'%')
+            </if>
             <if test="userVo.phoneNumber != null">
-                phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')
-            </if>>
+                and phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')
+            </if>
             <if test="userVo.isDeleted != null">
-                isDeleted = #{userVo.isDeleted}
-            </if>>
-        </where>>
+                and isDeleted = #{userVo.isDeleted}
+            </if>
+            limit #{userVo.pageNum},#{userVo.pageSize}
+        </where>
     </select>
 </mapper>

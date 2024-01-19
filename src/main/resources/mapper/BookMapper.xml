@@ -35,24 +35,21 @@
 
     <insert id="addBook">
         insert into book (ISBN,bookName,author,publishId,publishDate,price,picture,content,
-                          createTime,isDeleted) values (#{ISBN},#{bookName},#{author},#{publishId},
-                                                        #{publishDate},#{price},#{picture},#{content},#{createTime},#{isDeleted})
+                          createTime,isDeleted) values (#{bookVo.ISBN},#{bookVo.bookName},#{bookVo.author},#{bookVo.publishId},
+                                                        #{bookVo.publishDate},#{bookVo.price},#{bookVo.picture},#{bookVo.content},
+                                                        #{bookVo.createTime},#{bookVo.isDeleted})
     </insert>
 
+    <!--删除图书-->
     <update id="deleteByISBN">
         update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where ISBN = #{ISBN}
     </update>
 
     <!--修改图书信息-->
     <update id="updateBook">
-        update book set bookName = #{bookName}, author = #{author}, publishId = #{publishId}, publishDate = #{publishDate}, price = #{price},
-                        picture = #{picture}, content = #{content}, updateTime = #{updateTime}, isDeleted = #{isDeleted} where ISBN = #{ISBN}
+        update book set bookName = #{bookVo.bookName}, author = #{bookVo.author}, publishId = #{bookVo.publishId}, publishDate = #{bookVo.publishDate}, price = #{bookVo.price},
+                        picture = #{bookVo.picture}, content = #{bookVo.content}, updateTime = #{bookVo.updateTime}, isDeleted = #{bookVo.isDeleted} where ISBN = #{bookVo.ISBN}
     </update>
-
-
-    <!--查询全部图书-->
-
-
 
     <!--根据条件查询图书-->
     <select id="selectBookPage" resultType="com.platform.pojo.vo.BookVo">
@@ -87,7 +84,10 @@
             <if test="bookVo.type != null">
                 and (t1.type=#{bookVo.type} OR t2.type=#{bookVo.type})
             </if>
-            limit #{pageNum},#{pageSize}
+            <if test="bookVo.isDeleted != null">
+                and isDeleted = #{bookVo.isDeleted}
+            </if>
+            limit #{bookVo.pageNum},#{bookVo.pageSize}
         </where>
     </select>
 

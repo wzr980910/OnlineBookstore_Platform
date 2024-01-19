@@ -38,6 +38,7 @@ public class Book implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
+    @TableLogic(value = "0",delval = "1")
     private Integer isDeleted;
 
     private static final long serialVersionUID = 1L;

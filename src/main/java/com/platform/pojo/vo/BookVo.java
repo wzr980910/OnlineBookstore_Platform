@@ -1,5 +1,7 @@
 package com.platform.pojo.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,7 @@ public class BookVo {
 
     private Date updateTime;
 
+    @TableLogic(value = "0",delval = "1")
     private Integer isDeleted;
 
     private Integer pageNum = 1;

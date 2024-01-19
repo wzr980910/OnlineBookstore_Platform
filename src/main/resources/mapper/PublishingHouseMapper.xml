@@ -20,4 +20,46 @@
         publishPhone,publishEmail,createTime,
         updateTime,isDeleted
     </sql>
+
+    <!--根据id查询出版社-->
+    <select id="getPublishingHouseById" resultType="com.platform.pojo.PublishingHouse">
+        select * from publishing_house where id = #{id}
+    </select>
+
+    <!--添加出版社-->
+    <insert id="addPublish" useGeneratedKeys="true" keyProperty="id">
+        insert into publishing_house (publishName,publishAddress,publishPhone,publishEmail,createTime,isDeleted)
+               values (#{publishName},#{publishAddress},#{publishPhone},#{publishEmail},#{createTime},#{isDeleted})
+    </insert>
+
+    <!--删除出版社-->
+    <update id="deleteById">
+        update bopublishing_house set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
+    </update>
+
+    <!--修改出版社-->
+    <update id="updatePublish">
+        update bopublishing_house set publishName = #{publishName}, publishAddress = #{publishAddress},
+                                        publishPhone = #{publishPhone}, publishEmail = #{publishEmail},
+                                        updateTime = #{updateTime}, isDeleted = #{isDeleted},
+    </update>
+
+    <!--根据条件查询出版社-->
+    <select id="selectPublish" resultType="com.platform.pojo.PublishingHouse">
+        select * from  bopublishing_house
+        <where>
+            <if test="publishName != null">
+                publishName like CONCAT('%',#{PublishingHouseVo.publishName},'%')
+            </if>
+            <if test="publishAddress != null">
+                and publishAddress like CONCAT('%',#{PublishingHouseVo.publishAddress},'%')
+            </if>
+            <if test="publishPhone != null">
+                and publishPhone like CONCAT('%',#{PublishingHouseVo.publishPhone},'%')
+            </if>
+
+            limit #{PublishingHouseVo.pageNum},#{PublishingHouseVo.pageSize}
+        </where>
+
+    </select>
 </mapper>

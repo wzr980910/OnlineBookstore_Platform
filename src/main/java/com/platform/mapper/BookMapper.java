@@ -22,7 +22,7 @@ public interface BookMapper extends BaseMapper<Book> {
 
     void addBook(BookVo bookVo);
 
-    void deleteByISBN(String ISBN, Date updateTime);
+    void deleteByISBN(String ISBN,Integer isDeleted, Date updateTime);
 
     void updateBook(BookVo bookVo);
 

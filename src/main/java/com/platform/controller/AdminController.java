@@ -8,6 +8,7 @@ import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,10 @@ import static com.platform.util.result.ResultCode.*;
  * @Date: 2024/01/13/20:48
  * @Description:管理员操作类
  */
-@Api(tags = "管理员操作")
+
 @RestController
 @RequestMapping("/admin")
+@Api(value = "/admin",tags = "管理员操作")
 public class AdminController {
 
     @Autowired
@@ -36,11 +38,11 @@ public class AdminController {
     //管理员账号添加
 
     //方法参数说明，name参数名；value参数说明，备注；dataType参数类型；required 是否必传；defaultValue 默认值
-    @ApiImplicitParam(name = "admin", value = "新增管理员数据")
-    //说明是什么方法(可以理解为方法注释)
-    @ApiOperation(value = "添加管理员")
+
+    //value 对操作的简单说明,notes 对操作的详细说明,httpMethod HTTP请求的动作名
+    @ApiOperation(value = "添加",notes = "添加管理员",httpMethod = "POST")
     @PostMapping("/addAdmin")
-    public RestResult addadmin(@RequestBody Admin admin){
+    public RestResult addAdmin(@RequestBody Admin admin){
         RestResult restResult = null;
         //校验账号是否已存在
         Admin isAdmin = adminService.getByAdminName(admin.getAdminName());

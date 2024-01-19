@@ -1,8 +1,14 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.platform.pojo.Book;
 import com.platform.pojo.PublishingHouse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.vo.PublishingHouseVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.Date;
 
 /**
 * @author 邓桂材
@@ -13,6 +19,15 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PublishingHouseMapper extends BaseMapper<PublishingHouse> {
 
+    long addPublish(PublishingHouse publishingHouse);
+
+    PublishingHouse getPublishingHouseById(long id);
+
+    void deleteById(long id, int isDeleted, Date updateTime);
+
+    void updatePublish(PublishingHouse publishingHouse);
+
+    IPage<PublishingHouse> selectPublish(Page<?> page, PublishingHouseVo publishingHouseVo);
 }
 
 

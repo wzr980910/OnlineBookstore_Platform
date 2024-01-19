@@ -18,7 +18,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     /**
-     1. swagger配置类
+     * 创建API应用
+     * apiInfo() 增加API相关信息
+     * 通过select()函数返回一个ApiSelectorBuilder实例,用来控制哪些接口暴露给Swagger来展现，
+     * 本例采用指定扫描的包路径来定义指定要建立API的目录。
+     * @return
      */
     @Bean
     public Docket createRestApi() {
@@ -28,12 +32,17 @@ public class SwaggerConfig {
                 //.enable(false)
                 .select()
                 //扫描的路径包,设置basePackage会将包下的所有被@Api标记类的所有方法作为api
-                .apis(RequestHandlerSelectors.basePackage("com.bookStore.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.platform.controller"))
                 //指定路径处理PathSelectors.any()代表所有的路径
                 .paths(PathSelectors.any())
                 .build();
     }
 
+    /**
+     * 创建该API的基本信息（这些基本信息会展现在文档页面中）
+     * 访问地址：http://项目实际地址/swagger-ui.html
+     * @return
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //设置文档标题(API名称)
