@@ -1,5 +1,6 @@
 package com.platform.controller;
 
+import com.platform.pojo.Admin;
 import com.platform.service.AdminService;
 import com.platform.util.JwtHelper;
 import com.platform.util.result.RestResult;
@@ -7,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,10 +30,12 @@ public class LoginController {
 
     //管理员登录操作
     @PostMapping("/login")
-    @ApiImplicitParam(name = "adminLogin", value = "登录")
     @ApiOperation(value = "登录", notes = "登录")
-    public RestResult login(@RequestParam String adminName, @RequestParam String password) {
+    public RestResult login(@RequestBody Admin admin) {
         RestResult restResult = null;
+        //获取账号密码
+        String adminName = admin.getAdminName();
+        String password = admin.getPassword();
         if(!adminName.trim().equals("") && !password.trim().equals("")) {
             restResult = adminService.login(adminName, password);
         } else {

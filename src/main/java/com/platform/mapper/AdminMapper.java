@@ -7,6 +7,7 @@ import com.platform.pojo.Book;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     Admin getByAdminName(String adminName);
 
-    void addAdmin(Admin admin);
+    void addAdmin(@Param("admin")Admin admin);
 
     void deleteByAdminName(String adminName,int isDeleted,Date updateTime);
 

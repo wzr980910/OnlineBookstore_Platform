@@ -22,7 +22,7 @@
 
     <!--登录-->
     <select id="login" resultType="com.platform.pojo.Admin">
-        select id,adminName,level from admin where adminName = #{adminName} and password = #{password}
+        select id,adminName,authority from admin where adminName = #{adminName} and password = #{password}
     </select>
 
     <!--通过adminName获取数据-->
