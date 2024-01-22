@@ -3,12 +3,14 @@ package com.platform.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.pojo.Admin;
+import com.platform.pojo.Book;
 import com.platform.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author 邓桂材
@@ -19,16 +21,17 @@ import java.util.Date;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    //根据账号查询用户
-    User getByNumber(String accountNumber);
+    /*(批量)注销*/
+    void removeUsersById(List<User> users);
 
-    //删除用户账号
-    void deleteByNumber(String accountNumber, int isDeleted, Date updateTime);
+    /*(批量)登记*/
+    void listUsersById(List<User> users);
 
-    //更新用户信息
-    void updateUser(User user);
-
+    /*根据条件查询用户信息*/
     IPage<Admin> selectUser(IPage<?> page, UserVo userVo);
+
+    /*查询用户详情*/
+    UserVo getUserDetailsById(Long id);
 }
 
 

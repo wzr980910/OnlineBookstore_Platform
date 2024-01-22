@@ -23,22 +23,18 @@
         createTime,updateTime,isDeleted
     </sql>
 
-    <!--根据accountNumber查询-->
-    <select id="getByNumber" resultType="com.platform.pojo.User">
-        select accountNumber,isDeleted from user where accountNumber = #{accountNumber}
-    </select>
-
-    <!--删除-->
-    <update id="deleteByNumber">
-        update user set isDeleted = #{isDeleted},updateTime = #{updateTime} where accountNumber = #{accountNumber}
-
+    <!--(批量)注销-->
+    <update id="removeUsersById">
+        <foreach collection="users" item="user" separator=";">
+            update book set isDeleted = #{user.isDeleted},updateTime = #{user.updateTime} where id = #{user.id}
+        </foreach>
     </update>
 
-    <!--更新信息-->
-    <update id="updateUser">
-        update user set password=#{password},userName=#{userName},
-                        phoneNumber=#{phoneNumber},picture=#{picture},gender=#{gender},updateTime=#{updateTime},
-                        isDeleted=#{isDeleted} where accountNumber = #{accountNumber}
+    <!--(批量)登记-->
+    <update id="listUsersById">
+        <foreach collection="users" item="user" separator=";">
+            update book set isDeleted = #{user.isDeleted},updateTime = #{user.updateTime} where id = #{user.id}
+        </foreach>
     </update>
 
     <!--根据条件模糊查询-->
@@ -62,5 +58,10 @@
             </if>
             limit #{userVo.pageNum},#{userVo.pageSize}
         </where>
+    </select>
+
+    <!--查询用户详情-->
+    <select id="getUserDetailsById" resultType="com.platform.pojo.vo.UserVo">
+        select * from user where id = #{id}
     </select>
 </mapper>
