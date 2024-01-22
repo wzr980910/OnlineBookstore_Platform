@@ -14,22 +14,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
 
 /**
-* @author 邓桂材
+* @author wzr
 * @description 针对表【publishing_house(出版社信息)】的数据库操作Service实现
 * @createDate 2024-01-14 16:56:54
 */
 @Service
 public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMapper, PublishingHouse>
     implements PublishingHouseService{
-
-    @Autowired
     private PublishingHouseMapper publishingHouseMapper;
+    @Autowired
+    private void setPublishingHouseServiceImpl(PublishingHouseMapper publishingHouseMapper){this.publishingHouseMapper = publishingHouseMapper;}
 
     @Override
     public boolean addPublish(PublishingHouse publishingHouse) {
@@ -44,19 +45,30 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
         return false;
     }
 
+    /*批量删除*/
     @Override
-    public boolean deleteById(long id) {
+    public boolean removePublishsById(List<PublishingHouse> publishingHouses) {
         //设置删除状态
-        int isDeleted = NO_DELETE.getCode();
-        //通过mapper层进行删除
-        publishingHouseMapper.deleteById(id,isDeleted,new Date());
-        //判断是否删除
-        PublishingHouse isDelete = publishingHouseMapper.getPublishingHouseById(id);
-        if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
-            //删除成功
-            return true;
+        for(PublishingHouse publishingHouse : publishingHouses){
+            publishingHouse.setIsDeleted(IS_DELETE.getCode());
+            publishingHouse.setUpdateTime(new Date());
         }
-        return false;
+        //mapper层设置下架状态
+        publishingHouseMapper.removePublishsById(publishingHouses);
+        return true;
+    }
+
+    /*批量登记*/
+    @Override
+    public boolean listPublishsById(List<PublishingHouse> publishingHouses) {
+        //设置登记状态
+        for(PublishingHouse publishingHouse : publishingHouses){
+            publishingHouse.setIsDeleted(NO_DELETE.getCode());
+            publishingHouse.setUpdateTime(new Date());
+        }
+        //mapper层设置下架状态
+        publishingHouseMapper.listPublishsById(publishingHouses);
+        return true;
     }
 
     @Override
@@ -73,20 +85,8 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
         Page<Book> page = new Page<>(publishingHouseVo.getPageNum(), publishingHouseVo.getPageSize());
         //查询
         publishingHouseMapper.selectPublish(page, publishingHouseVo);
-        //封装查询到的内容
-        Map<String, Object> pageInfo = new HashMap<>();
-        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
-        pageInfo.put("pageData", page.getRecords());
-        //从page中返回当前是第几页
-        pageInfo.put("pageNum", page.getCurrent());
-        //从page中返回当前页容量
-        pageInfo.put("pageSize", page.getSize());
-        //返回总页数
-        pageInfo.put("totalPage", page.getPages());
-        //返回结果总条数
-        pageInfo.put("totalSize", page.getTotal());
         Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", pageInfo);
+        pageInfoMap.put("pageInfo", page);
         return pageInfoMap;
     }
 }

@@ -32,9 +32,18 @@
                values (#{publishName},#{publishAddress},#{publishPhone},#{publishEmail},#{createTime},#{isDeleted})
     </insert>
 
-    <!--删除出版社-->
-    <update id="deleteById">
-        update bopublishing_house set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
+    <!--(批量)删除-->
+    <update id="removePublishsById">
+        <foreach collection="publishingHouses" item="publishingHouse" separator=";">
+            update publishingHouse set isDeleted = #{publishingHouse.isDeleted},updateTime = #{publishingHouse.updateTime} where id = #{publishingHouse.id}
+        </foreach>
+    </update>
+
+    <!--(批量)登记-->
+    <update id="listPublishsById">
+        <foreach collection="publishingHouses" item="publishingHouse" separator=";">
+            update publishingHouse set isDeleted = #{publishingHouse.isDeleted},updateTime = #{publishingHouse.updateTime} where id = #{publishingHouse.id}
+        </foreach>
     </update>
 
     <!--修改出版社-->

@@ -9,6 +9,7 @@ import com.platform.pojo.vo.PublishingHouseVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author 邓桂材
@@ -21,10 +22,14 @@ public interface PublishingHouseMapper extends BaseMapper<PublishingHouse> {
 
     long addPublish(PublishingHouse publishingHouse);
 
-    PublishingHouse getPublishingHouseById(long id);
+    PublishingHouse getPublishingHouseById(Long id);
 
-    void deleteById(long id, int isDeleted, Date updateTime);
+    /*(批量)删除*/
+    void removePublishsById(List<PublishingHouse> publishingHouses);
 
+
+    /*(批量)登记*/
+    void listPublishsById(List<PublishingHouse> publishingHouses);
     void updatePublish(PublishingHouse publishingHouse);
 
     IPage<PublishingHouse> selectPublish(Page<?> page, PublishingHouseVo publishingHouseVo);

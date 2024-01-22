@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.platform.util.result.ResultCode.BOOK_HAS_EXISTED;
@@ -33,46 +34,56 @@ public class PublishingHouseController {
 
     //添加出版社
     @PostMapping("/addPublish")
-    public RestResult addPublish(@RequestBody PublishingHouse publishingHouse){
-        RestResult restResult = null;
+    public RestResult addPublish(@RequestBody PublishingHouse publishingHouse) {
         //将publishingHouse传入service层进行处理
         boolean isAdd = publishingHouseService.addPublish(publishingHouse);
-        if(isAdd){
+        if (isAdd) {
             //添加成功,返回成功消息
-            restResult = RestResult.success();
-        }else{
+            return RestResult.success();
+        } else {
             //添加失败
-            restResult = RestResult.failure(BOOK_HAS_EXISTED);
+            return RestResult.failure(BOOK_HAS_EXISTED);
         }
-        return restResult;
     }
 
-    //删除出版社
-    @PostMapping("/deldetePublish")
-    public RestResult deldetePublish(@RequestParam long id){
-        RestResult restResult = null;
-        //删除图书
-        boolean isDeleted = publishingHouseService.deleteById(id);
-        if (isDeleted){
+    //(批量)删除出版社
+    @PostMapping("/removePublish")
+    public RestResult removePublishsById(@RequestBody List<PublishingHouse> publishingHouses) {
+        //删除出版社
+        boolean isDeleted = publishingHouseService.removePublishsById(publishingHouses);
+        if (isDeleted) {
             //删除成功
-            restResult =  RestResult.success();
-        }else {
+            return RestResult.success();
+        } else {
             //删除失败
-            restResult = RestResult.failure(OPERATION_FAILURE);
+            return RestResult.failure(OPERATION_FAILURE);
         }
-        return restResult;
+    }
+
+    //(批量)登记出版社
+    @PostMapping("/listPublishs")
+    public RestResult listPublishsById(@RequestBody List<PublishingHouse> publishingHouse) {
+        //删除出版社
+        boolean isDeleted = publishingHouseService.listPublishsById(publishingHouse);
+        if (isDeleted) {
+            //删除成功
+            return RestResult.success();
+        } else {
+            //删除失败
+            return RestResult.failure(OPERATION_FAILURE);
+        }
     }
 
     //修改出版社
     @PostMapping("/updatePublish")
-    public RestResult updatePublish(@RequestBody PublishingHouse publishingHouse){
+    public RestResult updatePublish(@RequestBody PublishingHouse publishingHouse) {
         RestResult restResult = null;
-        //将bookVo传入service层进行处理
+        //将publishingHouse传入service层进行处理
         boolean isUpdate = publishingHouseService.updatePublish(publishingHouse);
-        if (isUpdate){
+        if (isUpdate) {
             //修改成功
-            restResult =  RestResult.success();
-        }else {
+            restResult = RestResult.success();
+        } else {
             //修改失败
             restResult = RestResult.failure(OPERATION_FAILURE);
         }
@@ -81,11 +92,15 @@ public class PublishingHouseController {
 
     //根据条件查询出版社
     @PostMapping("/selectPublish")
-    public RestResult selectPublish(@RequestBody PublishingHouseVo PublishingHouseVo){
-        RestResult restResult=null;
-        Map<String,Object> map=publishingHouseService.selectPublish(PublishingHouseVo);
-        //查询成功，包装数据返回
-        restResult=new RestResult(ResultCode.SUCCESS,map);
-        return restResult;
+    public RestResult selectPublish(@RequestBody PublishingHouseVo PublishingHouseVo) {
+        Map<String, Object> map = publishingHouseService.selectPublish(PublishingHouseVo);
+        if (map != null) {
+            //查询成功，包装数据返回
+            return RestResult.success(ResultCode.SUCCESS, "查询成功", map);
+        } else {
+            //查询失败
+            return RestResult.failure(OPERATION_FAILURE);
+        }
     }
+
 }
