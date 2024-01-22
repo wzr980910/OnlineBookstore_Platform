@@ -13,4 +13,10 @@
     <sql id="Base_Column_List">
         id,type,parentId
     </sql>
+
+    <select id="selectPageType" resultType="com.platform.pojo.respojo.TypeGrade">
+        select a.type as type,
+               b.type as parentType
+        from type as a,type as b where b.id = a.parentId
+    </select>
 </mapper>
