@@ -26,11 +26,12 @@
         createTime,updateTime,isDeleted
     </sql>
 
-    <resultMap id="bookName" type="com.platform.pojo.Book">
-        <result property="bookName" column="bookName" jdbcType="VARCHAR"/>
-       </resultMap>
-    <select id="getBookByISBN" resultMap="bookName">
+    <select id="getBookByISBN" resultType="com.platform.pojo.Book">
         select id,bookName from book where ISBN = #{ISBN}
+    </select>
+
+    <select id="getBookById" resultType="com.platform.pojo.Book">
+        select id,bookName,isDelted from book where id = #{id}
     </select>
 
     <insert id="addBook">
@@ -40,25 +41,55 @@
                                                         #{bookVo.createTime},#{bookVo.isDeleted})
     </insert>
 
-    <!--删除图书-->
-    <update id="deleteByISBN">
-        update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where ISBN = #{ISBN}
+    <!--下架图书-->
+    <update id="removeById">
+        update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
+    </update>
+
+    <!--上架图书-->
+    <update id="listById">
+        update book set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
+    </update>
+
+    <!--批量上架图书-->
+    <update id="listBooksById">
+        <foreach collection="books" item="book" separator=";">
+            update book set isDeleted = #{book.isDeleted},updateTime = #{book.updateTime} where id = #{book.id}
+        </foreach>
+    </update>
+
+    <!--批量下架图书-->
+    <update id="removeBooksById">
+        <foreach collection="books" item="book" separator=";">
+            update book set isDeleted = #{book.isDeleted},updateTime = #{book.updateTime} where id = #{book.id}
+        </foreach>
     </update>
 
     <!--修改图书信息-->
     <update id="updateBook">
-        update book set bookName = #{bookVo.bookName}, author = #{bookVo.author}, publishId = #{bookVo.publishId}, publishDate = #{bookVo.publishDate}, price = #{bookVo.price},
-                        picture = #{bookVo.picture}, content = #{bookVo.content}, updateTime = #{bookVo.updateTime}, isDeleted = #{bookVo.isDeleted} where ISBN = #{bookVo.ISBN}
+        update book
+        <set>
+            <if test="bookName != null">bookName = #{bookVo.bookName},</if>
+            <if test=" != null">ISBN = #{bookVo.ISBN}</if>
+            <if test=" != null">author = #{bookVo.author},</if>
+            <if test=" != null">publishId = #{bookVo.publishId},</if>
+            <if test=" != null">publishDate = #{bookVo.publishDate},</if>
+            <if test=" != null">price = #{bookVo.price},</if>
+            <if test=" != null">picture = #{bookVo.picture},</if>
+            <if test=" != null">content = #{bookVo.content},</if>
+            <if test=" != null">updateTime = #{bookVo.updateTime},</if>
+            <if test=" != null">isDeleted = #{bookVo.isDeleted}</if>
+        </set>
+        where id = #{bookVo.id}
     </update>
 
-    <!--根据条件查询图书-->
     <select id="selectBookPage" resultType="com.platform.pojo.vo.BookVo">
-        select distinct book.* from book
-        <!-- 如果出版社名或者图书类型名不为空，需要联表查询-->
+        select distinct book.* ,publishName
+        from book
+        <!-- 需要联表查询出版社名称-->
+        left join publishing_house on book.publishId =publishing_house.id
         <trim>
-            <if test="bookVo.publishName != null">
-                left join publishing_house on book.publishId =publishing_house.id
-            </if>
+            <!--如果类型名不为空，需要连表查询 -->
             <if test="bookVo.type != null">
                 LEFT JOIN book_type ON book.id=book_type.bookId
                 LEFT JOIN TYPE t1 ON book_type.typeId=t1.id
@@ -66,29 +97,75 @@
             </if>
         </trim>
         <where>
-            <if test="bookVo.bookName != null">
-                bookName like CONCAT('%',#{bookVo.bookName},'%')
+            <!-- 如果书的Id不为空，则根据书Id查询-->
+            <if test="bookVo.id != null">
+                book.id=#{bookVo.id}
             </if>
+            <!--如果isbn不为空，需要查询isbn -->
+            <if test="bookVo.bookIsbn != null">
+                and ISBN =#{bookVo.bookIsbn}
+            </if>
+            <!--书名不为空，根据书名模糊查询 -->
+            <if test="bookVo.bookName != null">
+                and bookName like CONCAT('%',#{bookVo.bookName},'%')
+            </if>
+            <!-- 作者不为空，根据作者模糊查询-->
             <if test="bookVo.author != null">
                 and author like '%' || #{bookVo.author} || '%'
             </if>
+            <!--如果价格不为空，则根据给定价格查询 -->
+            <if test="bookVo.price != null">
+                and price = #{bookVo.price}
+            </if>
+            <!-- 有价格上限，查询价格下限和价格上线之间的数据-->
             <if test="bookVo.priceHigh != null">
                 and price between #{bookVo.priceLow} and #{bookVo.priceHigh}
             </if>
+            <!--如果价格不存在价格上限，查询大于价格下限的数据，默认价格下限为0 -->
             <if test="bookVo.priceHigh == null">
                 and price &gt;= #{bookVo.priceLow}
             </if>
+            <!-- 如果出版社名不为空，查询指定出版社名称的数据-->
             <if test="bookVo.publishName != null">
                 and publishing_house.publishName=#{bookVo.publishName}
             </if>
+            <!--如果type不为空，连表查询指定type的数据 -->
             <if test="bookVo.type != null">
                 and (t1.type=#{bookVo.type} OR t2.type=#{bookVo.type})
             </if>
-            <if test="bookVo.isDeleted != null">
-                and isDeleted = #{bookVo.isDeleted}
+            <if test="1 == 1">
+                and book.isDeleted = 0
             </if>
-            limit #{bookVo.pageNum},#{bookVo.pageSize}
         </where>
+        order by
+        <!--排序-->
+        <choose>
+            <!--价格-->
+            <otherwise>
+                book.price
+                <trim suffixOverrides=",">
+                    <if test="bookVo.priceOrder == 2">
+                        desc
+                    </if>
+                </trim>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getBookDetailsById" resultType="com.platform.pojo.vo.BookVo">
+        select distinct book.* ,publishName
+        from book
+        <!-- 需要联表查询出版社名称-->
+        left join publishing_house on book.publishId =publishing_house.id
+        <trim>
+            <!--如果类型名不为空，需要连表查询 -->
+            <if test="bookVo.type != null">
+                LEFT JOIN book_type ON book.id=book_type.bookId
+                LEFT JOIN TYPE t1 ON book_type.typeId=t1.id
+                LEFT JOIN TYPE t2 ON t1.parentId=t2.id
+            </if>
+        </trim>
+        where book.id = #{bookVo.id}
     </select>
 
 </mapper>

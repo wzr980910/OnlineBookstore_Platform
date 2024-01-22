@@ -1,10 +1,13 @@
 package com.platform.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.BookVo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,13 +24,24 @@ public interface BookService extends IService<Book> {
     //添加图书
     boolean addBook(BookVo bookVo);
 
+    //下架图书
+    boolean removeById(long id);
 
-    //删除图书
-    boolean deleteByISBN(String ISBN);
+    //上架图书
+    boolean listById(long id);
+
+    //批量上架
+    boolean listBooksById(List<Book> books);
+
+    //批量下架
+    boolean removeBooksById(List<Book> books);
 
     //修改图书
     boolean updateBook(BookVo bookVo);
 
     //根据条件查询图书
-    Map<String,Object> selectBookPage(BookVo bookVo);
+    Page<BookVo> selectBookPage(BookVo bookVo);
+
+    //查询图书详情
+    BookVo getBookDetailsById(long id);
 }

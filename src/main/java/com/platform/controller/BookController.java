@@ -1,5 +1,6 @@
 package com.platform.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import com.platform.service.BookService;
@@ -9,6 +10,9 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.platform.util.result.ResultCode.*;
@@ -24,81 +28,108 @@ import static com.platform.util.result.ResultCode.*;
 @RestController
 @RequestMapping("/book")
 public class BookController {
-
-    @Autowired
     private BookService bookService;
+    @Autowired
+    private void setBookController(BookService bookService){this.bookService = bookService;}
 
     //添加图书信息,获取BookVo实体类,将BookVo实体类中的数据分为Book实体类和book_type实体类存入数据库
     @PostMapping("/addBook")
     public RestResult addBook(@RequestBody BookVo bookVo){
-        RestResult restResult = null;
         //将bookVo传入service层进行处理
         boolean isAdd = bookService.addBook(bookVo);
         if(isAdd){
             //添加成功,返回成功消息
-            restResult = RestResult.success();
+            return RestResult.success();
         }else{
             //添加失败
-            restResult = RestResult.failure(BOOK_HAS_EXISTED);
+            return RestResult.failure(BOOK_HAS_EXISTED);
         }
-        return restResult;
     }
 
     //下架图书
-    @PostMapping("/deleteBook")
-    public RestResult deleteBook (@RequestParam String ISBN){
-        RestResult restResult = null;
+    @PostMapping("/removeBook")
+    public RestResult removeBook (@RequestParam long id){
         //下架图书
-        boolean isDeleted = bookService.deleteByISBN(ISBN);
+        boolean isDeleted = bookService.removeById(id);
         if (isDeleted){
             //下架成功
-            restResult =  RestResult.success();
+            return RestResult.success();
         }else {
             //下架失败
-            restResult = RestResult.failure(OPERATION_FAILURE);
+            return RestResult.failure(OPERATION_FAILURE);
         }
-        return restResult;
     }
 
     //上架图书
-    /*@PostMapping("/deleteBook")
-    public RestResult deleteBook (@RequestParam String ISBN){
-        RestResult restResult = null;
-        //下架图书
-        boolean isDeleted = bookService.deleteByISBN(ISBN);
+    @PostMapping("/listBook")
+    public RestResult listBook (@RequestParam long id){
+        //上架图书
+        boolean isDeleted = bookService.listById(id);
         if (isDeleted){
-            //下架成功
-            restResult =  RestResult.success();
+            //上架成功
+            return RestResult.success();
         }else {
-            //下架失败
-            restResult = RestResult.failure(OPERATION_FAILURE);
+            //上架失败
+            return RestResult.failure(OPERATION_FAILURE);
         }
-        return restResult;
-    }*/
+    }
+
+    //批量上架图书
+    @PostMapping("/listBooks")
+    public RestResult listBooks(@RequestBody List<Book> books){
+        boolean isListed = bookService.listBooksById(books);
+        if (isListed){
+            return RestResult.success(ResultCode.SUCCESS, "上架成功");
+        }else {
+            return RestResult.failure(ResultCode.OPERATION_FAILURE,"上架失败");
+        }
+    }
+
+    //批量上架图书
+    @PostMapping("/removeBooks")
+    public RestResult removeBooks(@RequestBody List<Book> books){
+        boolean isListed = bookService.removeBooksById(books);
+        if (isListed){
+            return RestResult.success(ResultCode.SUCCESS, "下架成功");
+        }else {
+            return RestResult.failure(ResultCode.OPERATION_FAILURE,"下架失败");
+        }
+    }
 
     //修改图书,获取BookVo实体类
     @PostMapping("/updateBook")
     public RestResult updateBook(@RequestBody BookVo bookVo){
-        RestResult restResult = null;
         //将bookVo传入service层进行处理
         boolean isUpdate = bookService.updateBook(bookVo);
         if (isUpdate){
             //修改成功
-            restResult =  RestResult.success();
+            return RestResult.success();
         }else {
             //修改失败
-            restResult = RestResult.failure(OPERATION_FAILURE);
+            return RestResult.failure(OPERATION_FAILURE);
         }
-        return restResult;
     }
 
     //根据条件查询图书
     @PostMapping("/selectBook")
     public RestResult selectBook(@RequestBody BookVo bookVo){
-        RestResult restResult=null;
-        Map<String,Object> map=bookService.selectBookPage(bookVo);
+        IPage<BookVo> page = bookService.selectBookPage(bookVo);
+        Map<String, Object> pageInfoMap = new HashMap<>();
+        pageInfoMap.put("pageInfo", page);
         //查询成功，包装数据返回
-        restResult=new RestResult(ResultCode.SUCCESS,map);
-        return restResult;
+        return new RestResult(ResultCode.SUCCESS,pageInfoMap);
+    }
+
+    //图书详情
+    @PostMapping("/bookDetails")
+    public RestResult bookDetails(@RequestParam long id){
+        BookVo bookVo = bookService.getBookDetailsById(id);
+        if (bookVo != null){
+            //查询图书详情成功
+            return RestResult.success(bookVo);
+        }else{
+            //查询图书详情失败
+            return RestResult.failure(OPERATION_FAILURE);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.platform.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.mapper.BookTypeMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
@@ -29,12 +31,13 @@ import static com.platform.common.DeleteState.NO_DELETE;
 @Service
 public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     implements BookService{
-
-    @Autowired
     private BookMapper bookMapper;
+    private BookTypeMapper bookTypeMapper;
 
     @Autowired
-    private BookTypeMapper bookTypeMapper;
+    private void setBookServiceImpl(BookMapper bookMapper){this.bookMapper = bookMapper;}
+    @Autowired
+    private void setBookServiceImpl(BookTypeMapper bookTypeMapper){this.bookTypeMapper = bookTypeMapper;}
 
     @Override
     public Book getBookByISBN(String ISBN) {
@@ -68,20 +71,62 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return false;
     }
 
-    //删除图书
+    //单个图书下架
     @Override
-    public boolean deleteByISBN(String ISBN) {
-        //设置删除状态
-        Integer isDeleted = NO_DELETE.getCode();
-        //通过mapper层进行删除
-        bookMapper.deleteByISBN(ISBN,isDeleted,new Date());
-        //判断是否删除
-        Book isDelete = bookMapper.getBookByISBN(ISBN);
+    public boolean removeById(long id) {
+        //设置下架状态
+        Integer isDeleted = IS_DELETE.getCode();
+        //通过mapper层进行修改状态
+        bookMapper.removeById(id,isDeleted,new Date());
+        //判断是否下架
+        Book isDelete = bookMapper.getBookById(id);
         if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
-            //删除成功
+            //下架成功
             return true;
         }
         return false;
+    }
+
+    //单本图书上架
+    @Override
+    public boolean listById(long id) {
+        //设置上架状态
+        Integer isDeleted = NO_DELETE.getCode();
+        //通过mapper层进行修改状态
+        bookMapper.listById(id,isDeleted,new Date());
+        //判断是否上架
+        Book isDelete = bookMapper.getBookById(id);
+        if (isDelete.getIsDeleted().equals(NO_DELETE.getCode())){
+            //上架成功
+            return true;
+        }
+        return false;
+    }
+
+    //多本图书上架
+    @Override
+    public boolean listBooksById(List<Book> books){
+        //设置上架状态
+        for(Book book : books){
+            book.setIsDeleted(NO_DELETE.getCode());
+            book.setUpdateTime(new Date());
+        }
+        //mapper层设置上架状态
+        bookMapper.listBooksById(books);
+        return true;
+    }
+
+    //多本图书下架
+    @Override
+    public boolean removeBooksById(List<Book> books){
+        //设置下架状态
+        for(Book book : books){
+            book.setIsDeleted(IS_DELETE.getCode());
+            book.setUpdateTime(new Date());
+        }
+        //mapper层设置下架状态
+        bookMapper.removeBooksById(books);
+        return true;
     }
 
     //修改图书
@@ -95,26 +140,18 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public Map<String, Object> selectBookPage(BookVo bookVo) {
+    public Page<BookVo> selectBookPage(BookVo bookVo) {
         //分页
-        Page<Book> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
+        Page<BookVo> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
         //查询
         bookMapper.selectBookPage(page, bookVo);
-        //封装查询到的内容
-        Map<String, Object> pageInfo = new HashMap<>();
-        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
-        pageInfo.put("pageData", page.getRecords());
-        //从page中返回当前是第几页
-        pageInfo.put("pageNum", page.getCurrent());
-        //从page中返回当前页容量
-        pageInfo.put("pageSize", page.getSize());
-        //返回总页数
-        pageInfo.put("totalPage", page.getPages());
-        //返回结果总条数
-        pageInfo.put("totalSize", page.getTotal());
-        Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", pageInfo);
-        return pageInfoMap;
+
+        return page;
+    }
+
+    @Override
+    public BookVo getBookDetailsById(long id) {
+        return bookMapper.getBookDetailsById(id);
     }
 
 

@@ -25,12 +25,18 @@ public interface AdminService extends IService<Admin> {
     boolean addAdmin(Admin admin);
 
     //删除账号
-    boolean deleteAdmin(String adminName);
+    boolean removeAdminById(Long id);
 
     //修改管理员账号
     boolean updateAdmin(Admin admin);
 
     //条件查找账号
     Map<String,Object> selectAdmin(AdminVo adminVo);
+
+    //批量注销
+    boolean removeAdminsById(List<Admin> admins);
+
+    //批量登记
+    boolean listAdminsById(List<Admin> admins);
 
 }

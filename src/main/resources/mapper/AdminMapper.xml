@@ -30,6 +30,11 @@
         select adminName,isDeleted from admin where adminName = #{adminName}
     </select>
 
+    <!--通过id获取数据-->
+    <select id="getById" resultType="com.platform.pojo.Admin">
+        select adminName,isDeleted from admin where id = #{id}
+    </select>
+
     <!--添加管理员-->
     <insert id="addAdmin">
         insert into admin (adminName,password,authority,createTime,isDeleted) values (#{admin.adminName},#{admin.password},
@@ -37,16 +42,24 @@
     </insert>
 
     <!--删除管理员-->
-    <delete id="deleteByAdminName">
-        update admin set isDeleted = #{isDeleted},updateTime = #{updateTime} where adminName = #{adminName}
+    <delete id="removeById">
+        update admin set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
     </delete>
 
     <!--更新管理员信息-->
     <update id="updateByAdminName">
-        update admin set password = #{admin.password},authority = #{admin.authority}, updateTime = #{admin.updateTime}, isDeleted = #{admin.isDeleted} where adminName = #{admin.adminName}
+        update admin
+        <set>
+            <if test="password != null">password = #{admin.password},</if>
+            <if test="authority != null">authority = #{admin.authority},</if>
+            <if test="updateTime != null">updateTime = #{admin.updateTime},</if>
+            <if test="isDeleted != null">isDeleted = #{admin.isDeleted}</if>
+        </set>
+        where id =#{admin.id}
+
     </update>
 
-    <!--根据adminName模糊查询管理员-->
+    <!--模糊查询管理员-->
     <select id="selectAdmin" resultType="com.platform.pojo.vo.AdminVo">
         select adminName ,authority ,isDeleted from admin
         <where>
@@ -62,4 +75,20 @@
             limit #{adminVo.pageNum},#{adminVo.pageSize}
         </where>
     </select>
+
+    <!--批量注销管理员-->
+    <update id="removeAdminsById">
+        <foreach collection="admins" item="admin" separator=";">
+            update book set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+        </foreach>
+    </update>
+
+    <!--批量登记管理员-->
+    <update id="listAdminsById">
+        <foreach collection="admins" item="admin" separator=";">
+            update book set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+        </foreach>
+    </update>
+
+
 </mapper>

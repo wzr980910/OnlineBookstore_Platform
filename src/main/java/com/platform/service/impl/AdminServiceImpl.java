@@ -83,13 +83,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     }
 
     @Override
-    public boolean deleteAdmin(String adminName) {
+    public boolean removeAdminById(Long id) {
         //设置删除状态
         int isDeleted = NO_DELETE.getCode();
         //通过mapper层进行删除
-        adminMapper.deleteByAdminName(adminName,isDeleted,new Date());
+        adminMapper.removeById(id,isDeleted,new Date());
         //判断是否删除
-        Admin isDelete = adminMapper.getByAdminName(adminName);
+        Admin isDelete = adminMapper.getById(id);
         if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
             //删除成功
             return true;
@@ -101,8 +101,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     public boolean updateAdmin(Admin admin) {
         admin.setPassword(MD5Util.encrypt(admin.getPassword()));
         //通过mapper层进行修改
-        adminMapper.updateByAdminName(admin);
-        return true;
+        int rows = adminMapper.updateById(admin);
+        if(rows >0){
+            //更新成功
+            return true;
+        } else {
+            //更新失败
+            return false;
+        }
     }
 
     //根据条件查询
@@ -112,21 +118,35 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         Page<Admin> page = new Page<>(adminVo.getPageNum(), adminVo.getPageSize());
         //查询
         adminMapper.selectAdmin(page, adminVo);
-        //封装查询到的内容
-        Map<String, Object> pageInfo = new HashMap<>();
-        //从page中获得返回的数据，作为value放入map中，对应k值为pageData
-        pageInfo.put("pageData", page.getRecords());
-        //从page中返回当前是第几页
-        pageInfo.put("pageNum", page.getCurrent());
-        //从page中返回当前页容量
-        pageInfo.put("pageSize", page.getSize());
-        //返回总页数
-        pageInfo.put("totalPage", page.getPages());
-        //返回结果总条数
-        pageInfo.put("totalSize", page.getTotal());
         Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", pageInfo);
+        pageInfoMap.put("pageInfo", page);
         return pageInfoMap;
+    }
+
+    //批量注销
+    @Override
+    public boolean removeAdminsById(List<Admin> admins) {
+        //设置注销状态
+        for(Admin admin : admins){
+            admin.setIsDeleted(IS_DELETE.getCode());
+            admin.setUpdateTime(new Date());
+        }
+        //mapper层设置注销状态
+        adminMapper.removeAdminsById(admins);
+        return true;
+    }
+
+    //批量登记
+    @Override
+    public boolean listAdminsById(List<Admin> admins) {
+        //设置登录状态
+        for(Admin admin : admins){
+            admin.setIsDeleted(NO_DELETE.getCode());
+            admin.setUpdateTime(new Date());
+        }
+        //mapper层设置登录状态
+        adminMapper.listAdminsById(admins);
+        return true;
     }
 }
 

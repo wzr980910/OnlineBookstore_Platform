@@ -24,11 +24,17 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     Admin getByAdminName(String adminName);
 
-    void addAdmin(@Param("admin")Admin admin);
+    Admin getById(Long id);
 
-    void deleteByAdminName(String adminName,int isDeleted,Date updateTime);
+    void addAdmin(Admin admin);
 
-    void updateByAdminName(Admin admin);
+    void removeById(Long id,int isDeleted,Date updateTime);
+
+    void removeAdminsById(List<Admin> admins);
+
+    void listAdminsById(List<Admin> admins);
+
+    int updateById(Admin admin);
 
     IPage<Admin> selectAdmin(IPage<?> page, AdminVo adminVo);
 }
