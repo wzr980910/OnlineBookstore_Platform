@@ -36,7 +36,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     int updateById(Admin admin);
 
-    IPage<Admin> selectAdmin(IPage<?> page, AdminVo adminVo);
+    IPage<AdminVo> selectAdmin(IPage<?> page, AdminVo adminVo);
 }
 
 

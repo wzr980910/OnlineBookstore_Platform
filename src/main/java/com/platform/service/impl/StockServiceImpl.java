@@ -1,9 +1,13 @@
 package com.platform.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.pojo.Stock;
+import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.StockVo;
 import com.platform.service.StockService;
 import com.platform.mapper.StockMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +19,27 @@ import org.springframework.stereotype.Service;
 public class StockServiceImpl extends ServiceImpl<StockMapper, Stock>
     implements StockService{
 
+    private StockMapper stockMapper;
+    @Autowired
+    private void setStockServiceImpl(StockMapper stockMapper){this.stockMapper = stockMapper;}
+
+    /*查询库存*/
+    @Override
+    public Page<StockVo> selectStock(StockVo stockVo) {
+        //分页
+        Page<StockVo> page = new Page<>(stockVo.getPageNum(), stockVo.getPageSize());
+        //查询
+        stockMapper.selectStock(page, stockVo);
+        return page;
+    }
+
+    /*入库*/
+    @Override
+    public boolean warehousing(Long id, Integer stockNum) {
+        //通过mapper层入库
+        stockMapper.warehousing(id,stockNum);
+        return false;
+    }
 }
 
 

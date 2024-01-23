@@ -1,7 +1,9 @@
 package com.platform.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.Admin;
 import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.BookVo;
 import com.platform.service.AdminService;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
@@ -13,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +36,7 @@ public class AdminController {
 
     private AdminService adminService;
     @Autowired
-    private void setAdminService(AdminService adminService){this.adminService = adminService;}
+    private AdminController(AdminService adminService){this.adminService = adminService;}
 
     //管理员账号添加
     //方法参数说明，name参数名；value参数说明，备注；dataType参数类型；required 是否必传；defaultValue 默认值
@@ -92,9 +95,16 @@ public class AdminController {
     //管理员账号信息查询
     @PostMapping("/selectAdmin")
     public RestResult selectAdmin(@RequestBody AdminVo adminVo){
-        Map<String,Object> map = adminService.selectAdmin(adminVo);
-        //查询成功，包装数据返回
-        return RestResult.success(map);
+        IPage<AdminVo> page = adminService.selectAdmin(adminVo);
+        if (page != null) {
+            //查询成功，包装数据返回
+            Map<String, Object> pageInfoMap = new HashMap<>();
+            pageInfoMap.put("pageInfo", page);
+            return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
+        } else {
+            //查询失败
+            return RestResult.failure(OPERATION_FAILURE);
+        }
     }
 
     //批量注销

@@ -73,7 +73,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
 
     //单个图书下架
     @Override
-    public boolean removeById(long id) {
+    public boolean removeById(Long id) {
         //设置下架状态
         Integer isDeleted = IS_DELETE.getCode();
         //通过mapper层进行修改状态
@@ -89,7 +89,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
 
     //单本图书上架
     @Override
-    public boolean listById(long id) {
+    public boolean listById(Long id) {
         //设置上架状态
         Integer isDeleted = NO_DELETE.getCode();
         //通过mapper层进行修改状态
@@ -145,12 +145,11 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         Page<BookVo> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
         //查询
         bookMapper.selectBookPage(page, bookVo);
-
         return page;
     }
 
     @Override
-    public BookVo getBookDetailsById(long id) {
+    public BookVo getBookDetailsById(Long id) {
         return bookMapper.getBookDetailsById(id);
     }
 

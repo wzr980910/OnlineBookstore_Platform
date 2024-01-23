@@ -1,7 +1,11 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.platform.pojo.Admin;
 import com.platform.pojo.Stock;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.StockVo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,6 +16,10 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface StockMapper extends BaseMapper<Stock> {
+
+    IPage<StockVo> selectStock(IPage<?> page, StockVo stockVo);
+
+    void warehousing(Long id,Integer stockNum);
 
 }
 

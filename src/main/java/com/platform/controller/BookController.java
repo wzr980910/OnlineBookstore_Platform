@@ -48,7 +48,7 @@ public class BookController {
 
     //下架图书
     @PostMapping("/removeBook")
-    public RestResult removeBook (@RequestParam long id){
+    public RestResult removeBook (@RequestParam Long id){
         //下架图书
         boolean isDeleted = bookService.removeById(id);
         if (isDeleted){
@@ -62,7 +62,7 @@ public class BookController {
 
     //上架图书
     @PostMapping("/listBook")
-    public RestResult listBook (@RequestParam long id){
+    public RestResult listBook (@RequestParam Long id){
         //上架图书
         boolean isDeleted = bookService.listById(id);
         if (isDeleted){
@@ -114,15 +114,20 @@ public class BookController {
     @PostMapping("/selectBook")
     public RestResult selectBook(@RequestBody BookVo bookVo){
         IPage<BookVo> page = bookService.selectBookPage(bookVo);
-        Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", page);
-        //查询成功，包装数据返回
-        return new RestResult(ResultCode.SUCCESS,pageInfoMap);
+        if (page != null) {
+            //查询成功，包装数据返回
+            Map<String, Object> pageInfoMap = new HashMap<>();
+            pageInfoMap.put("pageInfo", page);
+            return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
+        } else {
+            //查询失败
+            return RestResult.failure(OPERATION_FAILURE);
+        }
     }
 
     //图书详情
     @PostMapping("/bookDetails")
-    public RestResult bookDetails(@RequestParam long id){
+    public RestResult bookDetails(@RequestParam Long id){
         BookVo bookVo = bookService.getBookDetailsById(id);
         if (bookVo != null){
             //查询图书详情成功

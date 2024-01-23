@@ -1,5 +1,6 @@
 package com.platform.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.AdminVo;
@@ -25,7 +26,7 @@ public interface UserService extends IService<User> {
     boolean listUsersById(List<User> users);
 
     //查询
-    Map<String,Object> selectUser(UserVo userVo);
+    Page<UserVo> selectUser(UserVo userVo);
 
     //详情信息
     UserVo getUserDetailsById(Long id);

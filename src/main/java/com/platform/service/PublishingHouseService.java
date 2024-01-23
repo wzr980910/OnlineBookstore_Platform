@@ -1,5 +1,6 @@
 package com.platform.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.PublishingHouse;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.PublishingHouseVo;
@@ -25,5 +26,5 @@ public interface PublishingHouseService extends IService<PublishingHouse> {
 
     boolean updatePublish(PublishingHouse publishingHouse);
 
-    Map<String, Object> selectPublish(PublishingHouseVo publishingHouseVo);
+    IPage<PublishingHouseVo> selectPublish(PublishingHouseVo publishingHouseVo);
 }

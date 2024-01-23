@@ -64,14 +64,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     /*根据条件查询用户信息*/
     @Override
-    public Map<String, Object> selectUser(UserVo userVo) {
+    public Page<UserVo> selectUser(UserVo userVo) {
         //分页
-        Page<Admin> page = new Page<>(userVo.getPageNum(), userVo.getPageSize());
+        Page<UserVo> page = new Page<>(userVo.getPageNum(), userVo.getPageSize());
         //查询
         userMapper.selectUser(page, userVo);
-        Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", page);
-        return pageInfoMap;
+        return page;
     }
 
     /*获取用户详情*/

@@ -1,7 +1,9 @@
 package com.platform.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.User;
+import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.UserVo;
 import com.platform.util.result.RestResult;
 import com.platform.service.UserService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +59,15 @@ public class UserController {
     //用户条件查找
     @PostMapping("/selectUser")
     public RestResult selectUser(@RequestBody UserVo userVo) {
-        Map<String, Object> map = userService.selectUser(userVo);
-        if (map != null) {
+        IPage<UserVo> page = userService.selectUser(userVo);
+        if (page != null) {
             //查询成功，包装数据返回
-            return RestResult.success(map);
+            Map<String, Object> pageInfoMap = new HashMap<>();
+            pageInfoMap.put("pageInfo", page);
+            return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
-            return RestResult.failure("查询失败");
+            return RestResult.failure(OPERATION_FAILURE);
         }
     }
     //用户详情信息

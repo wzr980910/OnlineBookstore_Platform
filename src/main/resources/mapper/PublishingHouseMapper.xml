@@ -54,7 +54,7 @@
     </update>
 
     <!--根据条件查询出版社-->
-    <select id="selectPublish" resultType="com.platform.pojo.PublishingHouse">
+    <select id="selectPublish" resultType="com.platform.pojo.vo.PublishingHouseVo">
         select * from  bopublishing_house
         <where>
             <if test="publishName != null">

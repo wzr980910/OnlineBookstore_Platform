@@ -1,8 +1,10 @@
 package com.platform.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.platform.pojo.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.vo.BookVo;
 import com.platform.util.result.RestResult;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public interface AdminService extends IService<Admin> {
     boolean updateAdmin(Admin admin);
 
     //条件查找账号
-    Map<String,Object> selectAdmin(AdminVo adminVo);
+    Page<AdminVo> selectAdmin(AdminVo adminVo);
 
     //批量注销
     boolean removeAdminsById(List<Admin> admins);

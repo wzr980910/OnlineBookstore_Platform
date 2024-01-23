@@ -1,6 +1,8 @@
 package com.platform.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.PublishingHouse;
+import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.PublishingHouseService;
 import com.platform.service.TypeService;
@@ -10,6 +12,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,11 +95,13 @@ public class PublishingHouseController {
 
     //根据条件查询出版社
     @PostMapping("/selectPublish")
-    public RestResult selectPublish(@RequestBody PublishingHouseVo PublishingHouseVo) {
-        Map<String, Object> map = publishingHouseService.selectPublish(PublishingHouseVo);
-        if (map != null) {
+    public RestResult selectPublish(@RequestBody PublishingHouseVo publishingHouseVo) {
+        IPage<PublishingHouseVo> page = publishingHouseService.selectPublish(publishingHouseVo);
+        if (page != null) {
             //查询成功，包装数据返回
-            return RestResult.success(ResultCode.SUCCESS, "查询成功", map);
+            Map<String, Object> pageInfoMap = new HashMap<>();
+            pageInfoMap.put("pageInfo", page);
+            return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
             return RestResult.failure(OPERATION_FAILURE);

@@ -2,6 +2,8 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.platform.mapper.BookMapper;
+import com.platform.mapper.BookTypeMapper;
 import com.platform.pojo.Admin;
 import com.platform.pojo.Book;
 import com.platform.pojo.vo.AdminVo;
@@ -32,10 +34,13 @@ import static com.platform.util.result.ResultCode.*;
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         implements AdminService {
 
-    @Autowired
     private AdminMapper adminMapper;
-    @Autowired
     private JwtHelper jwtHelper;
+    @Autowired
+    private void setAdminServiceImpl(AdminMapper adminMapper){this.adminMapper = adminMapper;}
+    @Autowired
+    private void setAdminServiceImpl(JwtHelper jwtHelper){this.jwtHelper = jwtHelper;}
+
 
     //登录操作
     @Override
@@ -113,14 +118,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
     //根据条件查询
     @Override
-    public Map<String, Object> selectAdmin(AdminVo adminVo) {
+    public Page<AdminVo> selectAdmin(AdminVo adminVo) {
         //分页
-        Page<Admin> page = new Page<>(adminVo.getPageNum(), adminVo.getPageSize());
+        Page<AdminVo> page = new Page<>(adminVo.getPageNum(), adminVo.getPageSize());
         //查询
         adminMapper.selectAdmin(page, adminVo);
-        Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", page);
-        return pageInfoMap;
+        return page;
     }
 
     //批量注销
@@ -149,7 +152,3 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         return true;
     }
 }
-
-
-
-

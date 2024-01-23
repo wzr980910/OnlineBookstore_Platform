@@ -25,10 +25,10 @@ public interface BookService extends IService<Book> {
     boolean addBook(BookVo bookVo);
 
     //下架图书
-    boolean removeById(long id);
+    boolean removeById(Long id);
 
     //上架图书
-    boolean listById(long id);
+    boolean listById(Long id);
 
     //批量上架
     boolean listBooksById(List<Book> books);
@@ -43,5 +43,5 @@ public interface BookService extends IService<Book> {
     Page<BookVo> selectBookPage(BookVo bookVo);
 
     //查询图书详情
-    BookVo getBookDetailsById(long id);
+    BookVo getBookDetailsById(Long id);
 }

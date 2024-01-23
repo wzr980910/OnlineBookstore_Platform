@@ -79,14 +79,14 @@
     <!--批量注销管理员-->
     <update id="removeAdminsById">
         <foreach collection="admins" item="admin" separator=";">
-            update book set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+            update admin set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
         </foreach>
     </update>
 
     <!--批量登记管理员-->
     <update id="listAdminsById">
         <foreach collection="admins" item="admin" separator=";">
-            update book set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+            update admin set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
         </foreach>
     </update>
 

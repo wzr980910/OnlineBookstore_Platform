@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.pojo.Book;
 import com.platform.pojo.BookType;
 import com.platform.pojo.PublishingHouse;
+import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.PublishingHouseService;
 import com.platform.mapper.PublishingHouseMapper;
@@ -80,14 +81,12 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
     }
 
     @Override
-    public Map<String, Object> selectPublish(PublishingHouseVo publishingHouseVo) {
+    public Page<PublishingHouseVo> selectPublish(PublishingHouseVo publishingHouseVo) {
         //分页
-        Page<Book> page = new Page<>(publishingHouseVo.getPageNum(), publishingHouseVo.getPageSize());
+        Page<PublishingHouseVo> page = new Page<>(publishingHouseVo.getPageNum(), publishingHouseVo.getPageSize());
         //查询
         publishingHouseMapper.selectPublish(page, publishingHouseVo);
-        Map<String, Object> pageInfoMap = new HashMap<>();
-        pageInfoMap.put("pageInfo", page);
-        return pageInfoMap;
+        return page;
     }
 }
 

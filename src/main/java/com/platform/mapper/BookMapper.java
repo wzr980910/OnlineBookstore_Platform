@@ -22,13 +22,13 @@ public interface BookMapper extends BaseMapper<Book> {
 
     Book getBookByISBN(String ISBN);
 
-    Book getBookById(long id);
+    Book getBookById(Long id);
 
     void addBook(BookVo bookVo);
 
-    void removeById(long id,Integer isDeleted, Date updateTime);
+    void removeById(Long id,Integer isDeleted, Date updateTime);
 
-    void listById(long id,Integer isDeleted, Date updateTime);
+    void listById(Long id,Integer isDeleted, Date updateTime);
 
     void listBooksById(List<Book> books);
 
@@ -36,9 +36,9 @@ public interface BookMapper extends BaseMapper<Book> {
 
     void updateBook(BookVo bookVo);
 
-    IPage<Book> selectBookPage(IPage<?> page, @Param("bookVo") BookVo bookVo);
+    IPage<BookVo> selectBookPage(IPage<?> page,BookVo bookVo);
 
-    BookVo getBookDetailsById(long id);
+    BookVo getBookDetailsById(Long id);
 }
 
 
