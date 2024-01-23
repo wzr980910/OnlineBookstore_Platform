@@ -32,7 +32,8 @@ public class LoginConfig implements WebMvcConfigurer {
 //                "/**/*.jpg",
 //                "/swagger-ui.html",
 //                "/swagger-resources/**",
-//                "/webjars/**"
+//                "/webjars/**",
+//                "/alipay/**"
 //        );
 //    }
 }

@@ -17,9 +17,18 @@ public enum OrderStatus {
      */
     WAIT_SEND(1),
     /**
-     * 待收货
+     * 已发货
      */
-    WAIT_RECEIVE(2);
+    WAIT_RECEIVE(2),
+    /**
+     * 已收货
+     */
+    ALREADY_RECEIVE(3),
+    /**
+     * 注销订单
+     */
+    IS_DELETED(4);
+
     private Integer code;
 
     OrderStatus(Integer code){

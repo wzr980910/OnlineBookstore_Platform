@@ -8,7 +8,7 @@ package com.platform.util.result;
  */
 public enum ResultCode {
     /* 成功状态码 */
-    SUCCESS(1,"成功"),
+    SUCCESS(200,"成功"),
     FILE_UPLOAD_SUCCESS(2,"文件上传成功"),
     /* 未知异常：100-199 */
     UNKNOWN_ERROR(100,"未知错误"),

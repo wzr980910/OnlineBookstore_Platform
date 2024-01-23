@@ -2,8 +2,10 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.pojo.Address;
+import com.platform.pojo.vo.OrdersShowVo;
 import com.platform.service.AddressService;
 import com.platform.mapper.AddressMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,7 +16,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address>
     implements AddressService{
+    private AddressMapper addressMapper;
+    @Autowired
+    public void setAddressServiceImpl(AddressMapper addressMapper){this.addressMapper = addressMapper;}
 
+    @Override
+    public boolean updateInfo(OrdersShowVo ordersShowVo) {
+        //通过mapper层更新数据
+        addressMapper.updateInfo(ordersShowVo);
+        return true;
+    }
 }
 
 

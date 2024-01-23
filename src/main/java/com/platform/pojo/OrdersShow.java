@@ -18,13 +18,9 @@ public class OrdersShow implements Serializable {
 
     private String accountNumber;
 
-    private Date date;
-
     private Integer totalPrice;
 
-    private String toShoppingAddress;
-
-    private String contact;
+    private Long addressId;
 
     private String status;
 

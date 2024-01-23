@@ -19,4 +19,25 @@
         city,county,detail,
         phone
     </sql>
+
+    <update id="updateInfo">
+        update address set
+        <if test="ordersShowVo.phone != null">
+            phone = #{ordersShowVo.phone}
+        </if>
+        <if test="orderShowVo.province != null">
+            and province = #{orderShowVo.province}
+        </if>
+        <if test="orderShowVo.city != null">
+            and city = #{orderShowVo.city}
+        </if>
+        <if test="orderShowVo.county != null">
+            and county = #{orderShowVo.county}
+        </if>
+        <if test="orderShowVo.detail != null">
+            and detail = #{orderShowVo.detail}
+        </if>
+        where id = #{orderShowVo.addressId}
+    </update>
+
 </mapper>

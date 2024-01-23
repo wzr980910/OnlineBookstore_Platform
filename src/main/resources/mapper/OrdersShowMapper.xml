@@ -22,4 +22,56 @@
         date,totalPrice,toShoppingAddress,
         contact,status,createTime,updateTime
     </sql>
+
+    <!--查询订单-->
+    <select id="selectOrders" resultType="com.platform.pojo.vo.OrdersShowVo">
+        select o.orderId,u.userName,o.payTime,a.phone,
+               concat(a.province,a.city,a.county,a.detail) as address,
+               o.totalPrice,o.`status`
+        from orders_show as o
+                 left JOIN user as u on o.userId = u.id
+                 left JOIN address as a on o.addressId = a.id
+        <where>
+            <if test="ordersShowVo.userName != null">
+                u.userName like CONCAT('%',#{ordersShowVo.userName},'%')
+            </if>
+            <if test="ordersShowVo.orderId != null">
+                o.orderId = #{ordersShowVo.orderId}
+            </if>
+            <if test="ordersShowVo.startingTime != null">
+                o.payTime between #{orderShowVo.startingTime} and #{orderShowVo.deadline}
+            </if>
+        </where>
+    </select>
+
+    <!--查询addressId-->
+    <select id="getAddressIdById" resultType="com.platform.pojo.OrdersShow">
+        select addressId from orders_show where id = #{ordersShowVo.id}
+    </select>
+
+    <!--修改删除状态-->
+    <update id="removeOrder">
+        update orders_show set status = #{status} where id =#{id}
+    </update>
+
+    <!--通过id获取status-->
+    <select id="getStatusById" resultType="com.platform.pojo.OrdersShow">
+        select status from orders_show where id = #{id}
+    </select>
+
+    <!--修改删除状态-->
+    <update id="sendGoods">
+        update orders_show set status = #{status} where id =#{id}
+    </update>
+
+    <!--查询详情(下半部分)-->
+    <select id="getDetailsById" resultType="com.platform.pojo.respojo.OrdersDetails">
+        select b.bookName,p.publishName,t.type,b.price,o.number,b.price * o.number as totalPrice
+        from orders as o
+                 LEFT JOIN book as b on o.bookId = b.id
+                 LEFT JOIN publishing_house as p on b.publishId = p.id
+                 LEFT JOIN book_type as bt on b.id = bt.bookId
+                 LEFT JOIN type as t on bt.typeId = t.id
+        where orderId = #{orderId}
+    </select>
 </mapper>
