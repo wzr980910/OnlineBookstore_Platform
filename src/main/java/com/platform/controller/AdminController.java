@@ -36,7 +36,7 @@ public class AdminController {
 
     private AdminService adminService;
     @Autowired
-    private AdminController(AdminService adminService){this.adminService = adminService;}
+    private void setAdminService(AdminService adminService){this.adminService = adminService;}
 
     @ApiOperation(value = "添加管理员", notes = "添加管理员,此时管理员Id不需要")
     @ApiResponses({
