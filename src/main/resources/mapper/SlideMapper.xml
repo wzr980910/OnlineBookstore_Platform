@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.mapper.SlideMapper">
+
+
+    <select id="queryAllPage" resultType="com.platform.pojo.Slide">
+        select slide.id,
+               slide.imgUrl,
+               slide.isDisplay,
+               slide.createTime,
+               slide.updateTime,
+               slide.isDelete
+        from slide
+        where slide.isDelete = 0
+    </select>
+
+    <update id="deleteBatchSlideIds" parameterType="java.util.List">
+        update slide
+        set slide.isDelete = 1
+        where slide.id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

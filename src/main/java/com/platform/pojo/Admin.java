@@ -43,6 +43,8 @@ public class Admin implements Serializable {
 
     @ApiModelProperty(value = "删除状态",required = false,example = "0")
     private Integer isDeleted;
+    @ApiModelProperty(value = "管理员头像",required = false,example = "https://...")
+    private String picture;
 
     private static final long serialVersionUID = 1L;
 }

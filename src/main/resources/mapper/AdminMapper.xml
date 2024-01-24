@@ -90,5 +90,9 @@
         </foreach>
     </update>
 
+    <update id="updateAdminImg">
+        update admin set picture = #{imgPath} where id = #{adminId}
+    </update>
+
 
 </mapper>

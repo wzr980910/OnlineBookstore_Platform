@@ -37,6 +37,8 @@ public interface AdminMapper extends BaseMapper<Admin> {
     int updateById(Admin admin);
 
     IPage<AdminVo> selectAdmin(IPage<?> page, AdminVo adminVo);
+
+    int updateAdminImg(@Param("imgPath") String imgPath,@Param("adminId") Long adminId);
 }
 
 

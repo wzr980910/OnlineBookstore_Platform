@@ -5,6 +5,7 @@ import com.platform.pojo.Admin;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.BookVo;
 import com.platform.service.AdminService;
+import com.platform.util.ThreadLocalUtil;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.HashMap;
@@ -128,4 +130,18 @@ public class AdminController {
             return RestResult.failure(OPERATION_FAILURE);
         }
     }
+
+    //管理员添加/更新头像
+    @PostMapping("/uploadAdminImg")
+    public RestResult uploadAdminImg(@RequestParam(value = "file") MultipartFile file){
+        Long adminId = ThreadLocalUtil.get();
+        boolean isUpload = adminService.uploadAdminImg(adminId, file);
+        if (isUpload){
+            return RestResult.success(SUCCESS,"上传成功");
+        }else {
+            return RestResult.failure(OPERATION_FAILURE,"上传失败");
+        }
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.BookVo;
 import com.platform.util.result.RestResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -40,5 +41,7 @@ public interface AdminService extends IService<Admin> {
 
     //批量登记
     boolean listAdminsById(List<Admin> admins);
+
+    boolean uploadAdminImg(Long adminId, MultipartFile file);
 
 }

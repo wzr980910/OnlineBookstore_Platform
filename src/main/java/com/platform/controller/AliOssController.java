@@ -36,14 +36,7 @@ public class AliOssController {
         log.info("文件上传：{}", file);
         String basePath = "bookPicture/";
         try {
-            //原始文件名
-            String originalFilename = file.getOriginalFilename();
-            //截取文件名后缀  xxx.png
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            //构造新文件名称
-            String objectName = basePath + UUID.randomUUID().toString() + extension;
-            //返回文件请求路径
-            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+            String filePath = aliOssUtil.upload(file.getBytes(), file,basePath);
             return RestResult.success(filePath);
         } catch (IOException e) {
             log.error("文件上传失败");
@@ -58,14 +51,7 @@ public class AliOssController {
         log.info("文件上传：{}", file);
         String basePath = "userPicture/";
         try {
-            //原始文件名
-            String originalFilename = file.getOriginalFilename();
-            //截取文件名后缀  xxx.png
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            //构造新文件名称
-            String objectName = basePath + UUID.randomUUID().toString() + extension;
-            //返回文件请求路径
-            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+            String filePath = aliOssUtil.upload(file.getBytes(), file,basePath);
             return RestResult.success(filePath);
         } catch (IOException e) {
             log.error("文件上传失败");

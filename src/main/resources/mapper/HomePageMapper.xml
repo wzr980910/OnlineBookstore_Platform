@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.mapper.HomePageMapper">
+
+    <!--查询用户总数-->
+    <select id="getUsersNumber" resultType="com.platform.pojo.HomePage">
+        SELECT COUNT(id) as totalUsers FROM user
+    </select>
+
+    <!--查询图书总数-->
+    <select id="getBooksNumber" resultType="com.platform.pojo.HomePage">
+        SELECT COUNT(id) as totalBooks FROM book
+    </select>
+
+    <!--查询订单总数-->
+    <select id="getOrdersNumber" resultType="com.platform.pojo.HomePage">
+        SELECT COUNT(id) as totalOrders FROM orders_show
+    </select>
+
+    <!--查询总收入-->
+    <select id="getIncome" resultType="com.platform.pojo.HomePage">
+        SELECT sum(totalPrice) as totalIncome FROM orders_show
+    </select>
+
+    <!--查询不同种类图书的销量-->
+    <select id="getBooksSale" resultType="com.platform.pojo.HomePage">
+        SELECT
+            type,
+            SUM(number) as totalSale
+        FROM
+            book
+                LEFT JOIN book_type ON book.id = book_type.bookId
+                LEFT JOIN type ON book_type.typeId = type.id
+                LEFT JOIN orders ON book.id = orders.bookId
+        WHERE
+            type IS NOT NULL
+        GROUP BY type
+
+    </select>
+
+    <!--查询不同月份的销量-->
+    <select id="ordersNumberByMonth" resultType="com.platform.pojo.HomePage">
+        SELECT
+            m.MONTH,
+            COUNT( orders_show.createTime ) AS ordersNumber
+        FROM
+            (
+                SELECT
+                    1 AS MONTH UNION
+                SELECT
+                    2 UNION
+                SELECT
+                    3 UNION
+                SELECT
+                    4 UNION
+                SELECT
+                    5 UNION
+                SELECT
+                    6 UNION
+                SELECT
+                    7 UNION
+                SELECT
+                    8 UNION
+                SELECT
+                    9 UNION
+                SELECT
+                    10 UNION
+                SELECT
+                    11 UNION
+                SELECT
+                    12
+            ) m
+                LEFT JOIN orders_show ON EXTRACT( MONTH FROM orders_show.createTime ) = m.MONTH
+        GROUP BY
+            m.MONTH
+        ORDER BY
+            m.MONTH;
+    </select>
+
+
+</mapper>

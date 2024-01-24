@@ -25,9 +25,13 @@ public enum OrderStatus {
      */
     ALREADY_RECEIVE(3),
     /**
-     * 注销订单
+     * 删除订单
      */
-    IS_DELETED(4);
+    IS_DELETED(4),
+    /**
+     * 订单取消
+     */
+    CANCEL(5);
 
     private Integer code;
 

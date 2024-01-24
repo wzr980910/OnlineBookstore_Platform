@@ -9,13 +9,16 @@ import com.platform.pojo.Book;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.service.AdminService;
 import com.platform.mapper.AdminMapper;
+import com.platform.util.AliOssUtil;
 import com.platform.util.JwtHelper;
 import com.platform.util.MD5Util;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,11 +39,16 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
     private AdminMapper adminMapper;
     private JwtHelper jwtHelper;
+
+    private AliOssUtil aliOssUtil;
     @Autowired
     private void setAdminServiceImpl(AdminMapper adminMapper){this.adminMapper = adminMapper;}
     @Autowired
     private void setAdminServiceImpl(JwtHelper jwtHelper){this.jwtHelper = jwtHelper;}
-
+    @Autowired
+    public void setAliOssUtil(AliOssUtil aliOssUtil) {
+        this.aliOssUtil = aliOssUtil;
+    }
 
     //登录操作
     @Override
@@ -150,5 +158,24 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         //mapper层设置登录状态
         adminMapper.listAdminsById(admins);
         return true;
+    }
+
+    @Override
+    public boolean uploadAdminImg(Long adminId, MultipartFile file) {
+        String basePath = "adminPicture/";
+        String upload="";
+        try {
+           upload = aliOssUtil.upload(file.getBytes(), file, basePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        int update = adminMapper.updateAdminImg(upload, adminId);
+        if (update > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 }
