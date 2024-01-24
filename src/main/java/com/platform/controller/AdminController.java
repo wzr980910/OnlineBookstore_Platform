@@ -8,9 +8,7 @@ import com.platform.service.AdminService;
 import com.platform.util.ThreadLocalUtil;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,17 +31,19 @@ import static com.platform.util.result.ResultCode.*;
 
 @RestController
 @RequestMapping("/admin")
-@Api(value = "/admin",tags = "管理员操作")
+@Api(value = "管理员接口", tags = "地址相关的接口", description = "地址测试接口")
 public class AdminController {
 
     private AdminService adminService;
     @Autowired
     private AdminController(AdminService adminService){this.adminService = adminService;}
 
-    //管理员账号添加
-    //方法参数说明，name参数名；value参数说明，备注；dataType参数类型；required 是否必传；defaultValue 默认值
-    //value 对操作的简单说明,notes 对操作的详细说明,httpMethod HTTP请求的动作名
-    @ApiOperation(value = "添加",notes = "添加管理员",httpMethod = "POST")
+    @ApiOperation(value = "添加管理员", notes = "添加管理员,此时管理员Id不需要")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+            @ApiResponse(code = 2005,message = "管理员已存在")
+    })
     @PostMapping("/addAdmin")
     public RestResult addAdmin(@RequestBody Admin admin){
         //校验账号是否已存在
@@ -58,21 +58,27 @@ public class AdminController {
                 return RestResult.success();
             }else{
                 //添加失败
-                return RestResult.failure(USER_HAS_EXISTED);
+                return RestResult.failure(OPERATION_FAILURE);
             }
         }
     }
 
-
-    //管理员账号删除
-    @ApiImplicitParam(name = "delete", value = "删除管理员数据")
-    //说明是什么方法(可以理解为方法注释)
-    @ApiOperation(value = "删除管理员")
+    @ApiImplicitParam(name="removeAdmin",value="需要删除管理员的Id",required = true,paramType = "form")
+    @ApiOperation(value = "删除管理员", notes = "删除管理员删除管理员")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+                @ApiResponse(code = 1004,message = "参数缺失")
+    })
     @PostMapping("/removeAdmin")
     public RestResult removeAdmin(@RequestParam Long id){
+        //没有传入id
+        if(id == null){
+            return RestResult.failure(PARAM_NOT_COMPLETE);
+        }
         //删除账号
-        boolean isDeleted = adminService.removeAdminById(id);
-        if (isDeleted){
+        int row = adminService.removeAdminById(id);
+        if (row > 0){
             //删除成功
             return  RestResult.success();
         }else {
@@ -81,11 +87,21 @@ public class AdminController {
         }
     }
 
-    //管理员账号信息修改
+    @ApiOperation(value = "修改管理员信息", notes = "修改管理员信息")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+            @ApiResponse(code = 1004,message = "参数缺失")
+    })
     @PostMapping("/updateAdmin")
     public RestResult updateAdmin(@Validated@RequestBody Admin admin){
-        boolean isUpdate = adminService.updateAdmin(admin);
-        if (isUpdate){
+        //没有传入id
+        if(admin.getId() == null){
+            return RestResult.failure(PARAM_NOT_COMPLETE);
+        }
+        //修改管理员
+        int row = adminService.updateAdmin(admin);
+        if (row > 0){
             //修改成功
             return  RestResult.success();
         }else {
@@ -94,7 +110,11 @@ public class AdminController {
         }
     }
 
-    //管理员账号信息查询
+    @ApiOperation(value = "查询单个管理员/全部管理员", notes = "传入参数为空查询全部,或通过参数查询特定管理员")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/selectAdmin")
     public RestResult selectAdmin(@RequestBody AdminVo adminVo){
         IPage<AdminVo> page = adminService.selectAdmin(adminVo);
@@ -109,39 +129,49 @@ public class AdminController {
         }
     }
 
-    //批量注销
+    @ApiOperation(value = "注销单个管理员/全部管理员", notes = "传入格式为List<Admin>")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/removeAdminsById")
     public RestResult removeAdminsById(@RequestBody List<Admin> admins){
-        boolean isListed = adminService.removeAdminsById(admins);
-        if (isListed){
+        int row = adminService.removeAdminsById(admins);
+        if (row > 0){
             return RestResult.success("注销成功");
         }else {
             return RestResult.failure(OPERATION_FAILURE);
         }
     }
 
-    //批量登记
+    @ApiOperation(value = "登记单个管理员/全部管理员", notes = "传入格式为List<Admin>")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/listAdminsById")
     public RestResult listAdminsById(@RequestBody List<Admin> admins){
-        boolean isListed = adminService.listAdminsById(admins);
-        if (isListed){
+        int row = adminService.listAdminsById(admins);
+        if (row > 0){
             return RestResult.success("登记成功");
         }else {
             return RestResult.failure(OPERATION_FAILURE);
         }
     }
 
-    //管理员添加/更新头像
+    @ApiOperation(value = "更新头像", notes = "传入格式为文件file")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/uploadAdminImg")
     public RestResult uploadAdminImg(@RequestParam(value = "file") MultipartFile file){
         Long adminId = ThreadLocalUtil.get();
-        boolean isUpload = adminService.uploadAdminImg(adminId, file);
-        if (isUpload){
+        int row = adminService.uploadAdminImg(adminId, file);
+        if (row > 0){
             return RestResult.success(SUCCESS,"上传成功");
         }else {
             return RestResult.failure(OPERATION_FAILURE,"上传失败");
         }
     }
-
-
 }

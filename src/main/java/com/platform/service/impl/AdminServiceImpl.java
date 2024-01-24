@@ -96,32 +96,18 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     }
 
     @Override
-    public boolean removeAdminById(Long id) {
+    public int removeAdminById(Long id) {
         //设置删除状态
         int isDeleted = NO_DELETE.getCode();
         //通过mapper层进行删除
-        adminMapper.removeById(id,isDeleted,new Date());
-        //判断是否删除
-        Admin isDelete = adminMapper.getById(id);
-        if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
-            //删除成功
-            return true;
-        }
-        return false;
+        return adminMapper.removeById(id,isDeleted,new Date());
     }
 
     @Override
-    public boolean updateAdmin(Admin admin) {
+    public int updateAdmin(Admin admin) {
         admin.setPassword(MD5Util.encrypt(admin.getPassword()));
         //通过mapper层进行修改
-        int rows = adminMapper.updateById(admin);
-        if(rows >0){
-            //更新成功
-            return true;
-        } else {
-            //更新失败
-            return false;
-        }
+        return adminMapper.updateById(admin);
     }
 
     //根据条件查询
@@ -136,32 +122,30 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
     //批量注销
     @Override
-    public boolean removeAdminsById(List<Admin> admins) {
+    public int removeAdminsById(List<Admin> admins) {
         //设置注销状态
         for(Admin admin : admins){
             admin.setIsDeleted(IS_DELETE.getCode());
             admin.setUpdateTime(new Date());
         }
         //mapper层设置注销状态
-        adminMapper.removeAdminsById(admins);
-        return true;
+        return adminMapper.removeAdminsById(admins);
     }
 
     //批量登记
     @Override
-    public boolean listAdminsById(List<Admin> admins) {
+    public int listAdminsById(List<Admin> admins) {
         //设置登录状态
         for(Admin admin : admins){
             admin.setIsDeleted(NO_DELETE.getCode());
             admin.setUpdateTime(new Date());
         }
         //mapper层设置登录状态
-        adminMapper.listAdminsById(admins);
-        return true;
+        return adminMapper.listAdminsById(admins);
     }
 
     @Override
-    public boolean uploadAdminImg(Long adminId, MultipartFile file) {
+    public int uploadAdminImg(Long adminId, MultipartFile file) {
         String basePath = "adminPicture/";
         String upload="";
         try {
@@ -169,13 +153,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        int update = adminMapper.updateAdminImg(upload, adminId);
-        if (update > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-
+        return adminMapper.updateAdminImg(upload, adminId);
     }
 }

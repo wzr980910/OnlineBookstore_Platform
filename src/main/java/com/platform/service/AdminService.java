@@ -28,20 +28,20 @@ public interface AdminService extends IService<Admin> {
     boolean addAdmin(Admin admin);
 
     //删除账号
-    boolean removeAdminById(Long id);
+    int removeAdminById(Long id);
 
     //修改管理员账号
-    boolean updateAdmin(Admin admin);
+    int updateAdmin(Admin admin);
 
     //条件查找账号
     Page<AdminVo> selectAdmin(AdminVo adminVo);
 
     //批量注销
-    boolean removeAdminsById(List<Admin> admins);
+    int removeAdminsById(List<Admin> admins);
 
     //批量登记
-    boolean listAdminsById(List<Admin> admins);
+    int listAdminsById(List<Admin> admins);
 
-    boolean uploadAdminImg(Long adminId, MultipartFile file);
+    int uploadAdminImg(Long adminId, MultipartFile file);
 
 }
