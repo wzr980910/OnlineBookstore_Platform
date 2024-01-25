@@ -26,12 +26,12 @@ public interface OrdersShowService extends IService<OrdersShow> {
     /**
      * 删除订单
      */
-    boolean removeOrder(Long id);
+    int removeOrder(Long id);
 
     /**
      * 发货
      */
-    boolean sendGoods(Long id);
+    int sendGoods(Long id);
 
     /**
      * 查询详情

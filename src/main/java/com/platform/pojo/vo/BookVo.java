@@ -61,10 +61,10 @@ public class BookVo {
     private Integer isDeleted;
 
     @ApiModelProperty(value="分页查找时的页数")
-    private Integer pageNum = 1;
+    private Integer current;
 
     @ApiModelProperty(value="分页查找时的页容量")
-    private Integer pageSize = 10;
+    private Integer size;
 
     @ApiModelProperty(value="出版社名称")
     private String publishName;

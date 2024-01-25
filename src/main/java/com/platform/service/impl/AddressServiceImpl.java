@@ -21,10 +21,9 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address>
     public void setAddressServiceImpl(AddressMapper addressMapper){this.addressMapper = addressMapper;}
 
     @Override
-    public boolean updateInfo(OrdersShowVo ordersShowVo) {
+    public int updateInfo(OrdersShowVo ordersShowVo) {
         //通过mapper层更新数据
-        addressMapper.updateInfo(ordersShowVo);
-        return true;
+        return addressMapper.updateInfo(ordersShowVo);
     }
 }
 

@@ -44,23 +44,17 @@ public class OrdersShowServiceImpl extends ServiceImpl<OrdersShowMapper, OrdersS
     }
 
     @Override
-    public boolean removeOrder(Long id) {
+    public int removeOrder(Long id) {
         //修改删除状态
         Integer status = OrderStatus.IS_DELETED.getCode();
-        ordersShowMapper.removeOrder(id,status);
-        //判断是否修改成功
-        String isDeleted = ordersShowMapper.getStatusById(id).getStatus();
-        return Integer.valueOf(isDeleted).equals(status);
+        return ordersShowMapper.removeOrder(id,status);
     }
 
     @Override
-    public boolean sendGoods(Long id) {
+    public int sendGoods(Long id) {
         //修改发货状态
         Integer status = OrderStatus.WAIT_RECEIVE.getCode();
-        ordersShowMapper.sendGoods(id,status);
-        //判断是否修改成功
-        String isSend = ordersShowMapper.getStatusById(id).getStatus();
-        return Integer.valueOf(isSend).equals(status);
+        return ordersShowMapper.sendGoods(id,status);
     }
 
     @Override

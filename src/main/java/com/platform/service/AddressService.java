@@ -14,6 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AddressService extends IService<Address> {
 
-    boolean updateInfo(OrdersShowVo ordersShowVo);
+    int updateInfo(OrdersShowVo ordersShowVo);
 
 }

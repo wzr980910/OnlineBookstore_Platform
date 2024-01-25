@@ -127,7 +127,7 @@
                 and book.isDeleted = 0
             </if>
         </where>
-        limit #{bookVo.pageNum},#{bookVo.pageSize}
+        limit #{bookVo.current},#{bookVo.size}
     </select>
 
     <select id="selectNumber" resultType="com.platform.pojo.vo.BookVo">

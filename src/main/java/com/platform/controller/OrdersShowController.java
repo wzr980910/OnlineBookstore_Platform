@@ -59,8 +59,8 @@ public class OrdersShowController {
         //通过订单id获取收货地址id
         Long addressId = ordersShowService.getAddressIdById(ordersShowVo);
         //根据收货地址id更新联系电话和收货地址
-        boolean isUpdate = addressService.updateInfo(ordersShowVo);
-        if (isUpdate) {
+        int row = addressService.updateInfo(ordersShowVo);
+        if (row > 0) {
             //更新成功
             return RestResult.success();
         } else {
@@ -73,8 +73,8 @@ public class OrdersShowController {
     @PostMapping("/removeOrder")
     public RestResult removeOrder(@RequestParam Long id){
         //删除订单
-        boolean isDeleted = ordersShowService.removeOrder(id);
-        if (isDeleted){
+        int row = ordersShowService.removeOrder(id);
+        if (row > 0){
             return RestResult.success();
         } else {
             return RestResult.failure(OPERATION_FAILURE);
@@ -85,8 +85,8 @@ public class OrdersShowController {
     @PostMapping("/sendGoods")
     public RestResult sendGoods(@RequestParam Long id){
         //删除订单
-        boolean isSend = ordersShowService.sendGoods(id);
-        if (isSend){
+        int row  = ordersShowService.sendGoods(id);
+        if (row > 0){
             return RestResult.success();
         } else {
             return RestResult.failure(OPERATION_FAILURE);

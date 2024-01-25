@@ -31,7 +31,7 @@ public interface OrdersShowMapper extends BaseMapper<OrdersShow> {
     /**
      * 修改删除状态
      */
-    void removeOrder(Long id, Integer status);
+    int removeOrder(Long id, Integer status);
 
     /**
      * 根据id获取状态
@@ -40,7 +40,7 @@ public interface OrdersShowMapper extends BaseMapper<OrdersShow> {
     /**
      * 修改发货状态
      */
-    void sendGoods(Long id, Integer status);
+    int sendGoods(Long id, Integer status);
 
     OrdersDetails getDetailsById(Long orderId);
 

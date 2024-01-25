@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,11 +48,15 @@ public class HomePageController {
         //获取图书销量
         List<HomePage> booksSale = homePageService.getBooksSale();
         //用hashMap封装图书销量
-        HashMap<String,Integer> booksSaleMap = new HashMap<>();
-        for (int i = 0; i<booksSale.size(); i++){
-            booksSaleMap.put(booksSale.get(i).getType(),booksSale.get(i).getTotalSale());
+        HashMap<String,ArrayList> booksSaleMap = new HashMap<>();
+        ArrayList<String> typeList = new ArrayList<>();
+        ArrayList<Integer> saleList = new ArrayList<>();
+        for (HomePage homePage : booksSale) {
+            typeList.add(homePage.getType());
+            saleList.add(homePage.getTotalSale());
         }
-
+        booksSaleMap.put("name",typeList);
+        booksSaleMap.put("number",saleList);
         //根据月份查询订单数量
         List<HomePage> ordersNumber =  homePageService.ordersNumberByMonth();
         //封装月份
@@ -66,8 +71,8 @@ public class HomePageController {
         map.put("totalBooks",totalBooks);
         map.put("totalOrders",totalOrders);
         map.put("totalIncome",totalIncome);
-        map.put("onechartData",booksSaleMap);
-        map.put("twochartData",ordersArray);
+        map.put("oneChartData",booksSaleMap);
+        map.put("twoChartData",ordersArray);
         return RestResult.success(map);
     }
 }

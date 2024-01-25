@@ -129,7 +129,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     public Page<BookVo> selectBookPage(BookVo bookVo) {
 
         //分页
-        Page<BookVo> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
+        Page<BookVo> page = new Page<>(bookVo.getCurrent(), bookVo.getSize());
         //查询
         bookMapper.selectBookPage(page, bookVo);
         return page;
