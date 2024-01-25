@@ -26,7 +26,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     Admin getById(Long id);
 
-    void addAdmin(Admin admin);
+    int addAdmin(Admin admin);
 
     int removeById(Long id,int isDeleted,Date updateTime);
 

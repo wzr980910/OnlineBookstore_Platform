@@ -25,7 +25,7 @@ public interface AdminService extends IService<Admin> {
     Admin getByAdminName(String adminName);
 
     //将账号添加到数据库中
-    boolean addAdmin(Admin admin);
+    int addAdmin(Admin admin);
 
     //删除账号
     int removeAdminById(Long id);

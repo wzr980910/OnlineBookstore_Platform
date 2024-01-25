@@ -52,8 +52,8 @@ public class AdminController {
             return RestResult.failure(USER_HAS_EXISTED);
         }else {
             //账号不存在,将该账号添加到系统
-             boolean isAdd =  adminService.addAdmin(admin);
-            if(isAdd){
+             int row =  adminService.addAdmin(admin);
+            if(row > 0){
                 //添加成功,返回成功消息
                 return RestResult.success();
             }else{

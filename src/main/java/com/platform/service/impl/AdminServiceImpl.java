@@ -75,24 +75,16 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         return adminMapper.getByAdminName(adminName);
     }
 
-
     //将账号添加到数据库中
     @Override
-    public boolean addAdmin(Admin admin){
+    public int addAdmin(Admin admin){
         //设置删除状态
         admin.setIsDeleted(NO_DELETE.getCode());
         //密码加密
         String passwordEncry = MD5Util.encrypt(admin.getPassword());
         admin.setPassword(passwordEncry);
         //通过mapper层增添数据
-        adminMapper.addAdmin(admin);
-        //判断是否添加成功
-        Admin isAdmin = adminMapper.getByAdminName(admin.getAdminName());
-        if (isAdmin != null){
-            //添加成功
-            return true;
-        }
-        return false;
+        return adminMapper.addAdmin(admin);
     }
 
     @Override
