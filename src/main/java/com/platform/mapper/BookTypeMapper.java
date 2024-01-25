@@ -14,9 +14,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BookTypeMapper extends BaseMapper<BookType> {
 
-    void addBookType(BookVo bookVo);
+    int addBookType(BookVo bookVo);
 
-    void updateBookType(BookVo bookVo);
+    int updateBookType(BookVo bookVo);
 }
 
 

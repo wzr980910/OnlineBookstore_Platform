@@ -35,9 +35,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     private BookTypeMapper bookTypeMapper;
 
     @Autowired
-    private void setBookServiceImpl(BookMapper bookMapper){this.bookMapper = bookMapper;}
+    private void setBookMapper(BookMapper bookMapper){this.bookMapper = bookMapper;}
     @Autowired
-    private void setBookServiceImpl(BookTypeMapper bookTypeMapper){this.bookTypeMapper = bookTypeMapper;}
+    private void setBookTypeMapper(BookTypeMapper bookTypeMapper){this.bookTypeMapper = bookTypeMapper;}
 
     @Override
     public Book getBookByISBN(String ISBN) {
@@ -46,9 +46,10 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     }
 
     @Override
-    public boolean addBook(BookVo bookVo) {
+    public int addBook(BookVo bookVo) {
         Book book = null;
         BookType bookType = null;
+        int row = 0;
         //首先存入图书,如果成功则将图书与对应的类型关系存入book_type表中
         //创建ISBN唯一标识码并判断是否唯一
         String bookISBN = CreateISBNUtil.createISBN();
@@ -65,82 +66,68 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         Book isExisted = bookMapper.getBookByISBN(bookVo.getISBN());
         if (isExisted != null){
             //添加成功,将图书与类型信息添加到book_type表中
-            bookTypeMapper.addBookType(bookVo);
-            return true;
+            return bookTypeMapper.addBookType(bookVo);
+        } else {
+            //添加失败
+            return row;
         }
-        return false;
     }
 
-    //单个图书下架
+    /**
+     * 查询图书数量
+     */
     @Override
-    public boolean removeById(Long id) {
-        //设置下架状态
-        Integer isDeleted = IS_DELETE.getCode();
-        //通过mapper层进行修改状态
-        bookMapper.removeById(id,isDeleted,new Date());
-        //判断是否下架
-        Book isDelete = bookMapper.getBookById(id);
-        if (isDelete.getIsDeleted().equals(IS_DELETE.getCode())){
-            //下架成功
-            return true;
-        }
-        return false;
-    }
+    public BookVo selectNumber(BookVo bookVo) {
 
-    //单本图书上架
-    @Override
-    public boolean listById(Long id) {
-        //设置上架状态
-        Integer isDeleted = NO_DELETE.getCode();
-        //通过mapper层进行修改状态
-        bookMapper.listById(id,isDeleted,new Date());
-        //判断是否上架
-        Book isDelete = bookMapper.getBookById(id);
-        if (isDelete.getIsDeleted().equals(NO_DELETE.getCode())){
-            //上架成功
-            return true;
-        }
-        return false;
+        return bookMapper.selectNumber(bookVo);
     }
 
     //多本图书上架
     @Override
-    public boolean listBooksById(List<Book> books){
+    public int listBooksById(List<Book> books){
         //设置上架状态
         for(Book book : books){
             book.setIsDeleted(NO_DELETE.getCode());
             book.setUpdateTime(new Date());
         }
         //mapper层设置上架状态
-        bookMapper.listBooksById(books);
-        return true;
+        return bookMapper.listBooksById(books);
     }
 
     //多本图书下架
     @Override
-    public boolean removeBooksById(List<Book> books){
+    public int removeBooksById(List<Book> books){
         //设置下架状态
         for(Book book : books){
             book.setIsDeleted(IS_DELETE.getCode());
             book.setUpdateTime(new Date());
         }
         //mapper层设置下架状态
-        bookMapper.removeBooksById(books);
-        return true;
+        return bookMapper.removeBooksById(books);
     }
 
     //修改图书
     @Override
-    public boolean updateBook(BookVo bookVo) {
-        bookMapper.updateBook(bookVo);
-        //获取bookType数据,修改图书类型
-        bookTypeMapper.updateBookType(bookVo);
-        //修改成功
-        return true;
+    public int updateBook(BookVo bookVo) {
+        int tureFlag = 1;
+        int falseFlag = 0;
+        int row = bookMapper.updateBook(bookVo);
+        if (row > 0){
+            //book表中数据修改成功
+            if(bookVo.getTypeId() != 0){
+                //获取bookType数据,修改图书类型
+                return bookTypeMapper.updateBookType(bookVo);
+            }
+            return tureFlag;
+        }else {
+            //修改失败
+            return falseFlag;
+        }
     }
 
     @Override
     public Page<BookVo> selectBookPage(BookVo bookVo) {
+
         //分页
         Page<BookVo> page = new Page<>(bookVo.getPageNum(), bookVo.getPageSize());
         //查询

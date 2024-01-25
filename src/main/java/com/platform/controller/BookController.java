@@ -7,6 +7,9 @@ import com.platform.service.BookService;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,20 +27,24 @@ import static com.platform.util.result.ResultCode.*;
  * @Date: 2024/01/16/15:25
  * @Description:图书操作类
  */
-@Api(tags = "管理员操作")
+@Api(tags = "图书操作")
 @RestController
 @RequestMapping("/book")
 public class BookController {
-    private BookService bookService;
     @Autowired
-    private void setBookController(BookService bookService){this.bookService = bookService;}
+    private BookService bookService;
 
-    //添加图书信息,获取BookVo实体类,将BookVo实体类中的数据分为Book实体类和book_type实体类存入数据库
+    @ApiOperation(value = "添加图书信息", notes = "获取BookVo实体类,将BookVo实体类中的数据分为Book实体类和book_type实体类存入数据库")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+            @ApiResponse(code = 2005,message = "管理员已存在")
+    })
     @PostMapping("/addBook")
     public RestResult addBook(@RequestBody BookVo bookVo){
         //将bookVo传入service层进行处理
-        boolean isAdd = bookService.addBook(bookVo);
-        if(isAdd){
+        int row = bookService.addBook(bookVo);
+        if(row > 0){
             //添加成功,返回成功消息
             return RestResult.success();
         }else{
@@ -46,62 +53,46 @@ public class BookController {
         }
     }
 
-    //下架图书
-    @PostMapping("/removeBook")
-    public RestResult removeBook (@RequestParam Long id){
-        //下架图书
-        boolean isDeleted = bookService.removeById(id);
-        if (isDeleted){
-            //下架成功
-            return RestResult.success();
-        }else {
-            //下架失败
-            return RestResult.failure(OPERATION_FAILURE);
-        }
-    }
-
-    //上架图书
-    @PostMapping("/listBook")
-    public RestResult listBook (@RequestParam Long id){
-        //上架图书
-        boolean isDeleted = bookService.listById(id);
-        if (isDeleted){
-            //上架成功
-            return RestResult.success();
-        }else {
-            //上架失败
-            return RestResult.failure(OPERATION_FAILURE);
-        }
-    }
-
-    //批量上架图书
+    @ApiOperation(value = "上架图书", notes = "传参类型为List<Book>实体类列表")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/listBooks")
     public RestResult listBooks(@RequestBody List<Book> books){
-        boolean isListed = bookService.listBooksById(books);
-        if (isListed){
+        int row = bookService.listBooksById(books);
+        if (row > 0){
             return RestResult.success(ResultCode.SUCCESS, "上架成功");
         }else {
             return RestResult.failure(ResultCode.OPERATION_FAILURE,"上架失败");
         }
     }
 
-    //批量上架图书
+    @ApiOperation(value = "下架图书", notes = "传参类型为List<Book>实体类列表")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/removeBooks")
     public RestResult removeBooks(@RequestBody List<Book> books){
-        boolean isListed = bookService.removeBooksById(books);
-        if (isListed){
+        int row = bookService.removeBooksById(books);
+        if (row > 0){
             return RestResult.success(ResultCode.SUCCESS, "下架成功");
         }else {
             return RestResult.failure(ResultCode.OPERATION_FAILURE,"下架失败");
         }
     }
 
-    //修改图书,获取BookVo实体类
+    @ApiOperation(value = "修改图书", notes = "传参类型为BookVo实体类")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/updateBook")
     public RestResult updateBook(@RequestBody BookVo bookVo){
         //将bookVo传入service层进行处理
-        boolean isUpdate = bookService.updateBook(bookVo);
-        if (isUpdate){
+        int row = bookService.updateBook(bookVo);
+        if (row > 0){
             //修改成功
             return RestResult.success();
         }else {
@@ -110,14 +101,21 @@ public class BookController {
         }
     }
 
-    //根据条件查询图书
+    @ApiOperation(value = "查询图书", notes = "传参类型为BookVo实体类")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/selectBook")
     public RestResult selectBook(@RequestBody BookVo bookVo){
         IPage<BookVo> page = bookService.selectBookPage(bookVo);
+        BookVo s = bookService.selectNumber(bookVo);
+        //根据条件查询图书数量
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
+            pageInfoMap.put("total", s.getTotal());
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
@@ -125,7 +123,11 @@ public class BookController {
         }
     }
 
-    //图书详情
+    @ApiOperation(value = "图书详情信息", notes = "传参类型为id")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/bookDetails")
     public RestResult bookDetails(@RequestParam Long id){
         BookVo bookVo = bookService.getBookDetailsById(id);

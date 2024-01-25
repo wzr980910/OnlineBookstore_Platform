@@ -22,22 +22,19 @@ public interface BookService extends IService<Book> {
     Book getBookByISBN(String ISBN);
 
     //添加图书
-    boolean addBook(BookVo bookVo);
+    int addBook(BookVo bookVo);
 
-    //下架图书
-    boolean removeById(Long id);
-
-    //上架图书
-    boolean listById(Long id);
+    //查询图书数量
+    BookVo selectNumber(BookVo bookVo);
 
     //批量上架
-    boolean listBooksById(List<Book> books);
+    int listBooksById(List<Book> books);
 
     //批量下架
-    boolean removeBooksById(List<Book> books);
+    int removeBooksById(List<Book> books);
 
     //修改图书
-    boolean updateBook(BookVo bookVo);
+    int updateBook(BookVo bookVo);
 
     //根据条件查询图书
     Page<BookVo> selectBookPage(BookVo bookVo);

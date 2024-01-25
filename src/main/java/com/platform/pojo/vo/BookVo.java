@@ -75,4 +75,7 @@ public class BookVo {
 
     @ApiModelProperty(value="图书类型/标签名")
     private String type;
+
+    //图书数量
+    private int total;
 }
