@@ -31,7 +31,7 @@ import static com.platform.util.result.ResultCode.*;
 
 @RestController
 @RequestMapping("/admin")
-@Api(value = "管理员接口", tags = "地址相关的接口", description = "地址测试接口")
+@Api(value = "管理员接口", tags = "管理员相关的接口", description = "管理员测试接口")
 public class AdminController {
 
     private AdminService adminService;
@@ -118,10 +118,12 @@ public class AdminController {
     @PostMapping("/selectAdmin")
     public RestResult selectAdmin(@RequestBody AdminVo adminVo){
         IPage<AdminVo> page = adminService.selectAdmin(adminVo);
+        AdminVo adminTotal = adminService.selectTotal(adminVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
+            pageInfoMap.put("total", adminTotal.getTotal());
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败

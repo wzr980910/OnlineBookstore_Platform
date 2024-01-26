@@ -8,6 +8,7 @@ import com.platform.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -21,17 +22,30 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    /*(批量)注销*/
-    void removeUsersById(List<User> users);
+    /**
+     * (批量)注销
+     */
+    int removeUsersById(List<User> users);
 
-    /*(批量)登记*/
-    void listUsersById(List<User> users);
+    /**
+     * (批量)登记
+     */
+    int listUsersById(List<User> users);
 
-    /*根据条件查询用户信息*/
+    /**
+     * 根据条件查询用户信息
+     */
     IPage<Admin> selectUser(IPage<?> page, UserVo userVo);
 
-    /*查询用户详情*/
+    /**
+     * 查询用户详情
+     */
     UserVo getUserDetailsById(Long id);
+
+    /**
+     * 查询用户数量
+     */
+    UserVo selectTotal(@Param("userVo") UserVo userVo);
 }
 
 

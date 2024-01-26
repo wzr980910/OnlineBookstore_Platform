@@ -7,6 +7,7 @@ import com.platform.pojo.PublishingHouse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.PublishingHouseVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -20,19 +21,28 @@ import java.util.List;
 @Mapper
 public interface PublishingHouseMapper extends BaseMapper<PublishingHouse> {
 
-    long addPublish(PublishingHouse publishingHouse);
-
-    PublishingHouse getPublishingHouseById(Long id);
+    int addPublish(PublishingHouse publishingHouse);
 
     /*(批量)删除*/
-    void removePublishsById(List<PublishingHouse> publishingHouses);
+    int removePublishsById(List<PublishingHouse> publishingHouses);
 
 
     /*(批量)登记*/
     void listPublishsById(List<PublishingHouse> publishingHouses);
+
+    /**
+     * 更新
+     */
     void updatePublish(PublishingHouse publishingHouse);
 
+    //查询出版社
     IPage<PublishingHouse> selectPublish(Page<?> page, PublishingHouseVo publishingHouseVo);
+
+    //查询出版社数量
+    PublishingHouseVo selectNumber(@Param("publishingHouseVo") PublishingHouseVo publishingHouseVo);
+
+    //查询出版社名称
+    PublishingHouseVo selectPublishName(@Param("id") Long id);
 }
 
 

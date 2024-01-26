@@ -34,15 +34,19 @@ public interface OrdersShowMapper extends BaseMapper<OrdersShow> {
     int removeOrder(Long id, Integer status);
 
     /**
-     * 根据id获取状态
-     */
-    OrdersShow getStatusById(Long id);
-    /**
      * 修改发货状态
      */
     int sendGoods(Long id, Integer status);
 
+    /**
+     * 查询订单详情
+     */
     OrdersDetails getDetailsById(Long orderId);
+
+    /**
+     * 查询订单数量
+     */
+    OrdersShowVo selectTotal(OrdersShowVo ordersShowVo);
 
 }
 

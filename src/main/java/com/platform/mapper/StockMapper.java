@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.StockVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
-* @author 邓桂材
+* @author wzr
 * @description 针对表【stock(库存表)】的数据库操作Mapper
 * @createDate 2024-01-14 16:56:54
 * @Entity com.bookStore.pojo.Stock
@@ -17,9 +19,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface StockMapper extends BaseMapper<Stock> {
 
-    IPage<StockVo> selectStock(IPage<?> page, StockVo stockVo);
+    IPage<StockVo> selectStock(IPage<?> page, @Param("stockVo") StockVo stockVo);
 
-    void warehousing(Long id,Integer stockNum);
+    int warehousing(Long id,Integer stockNum);
+
+    StockVo selectTotal(@Param("stockVo") StockVo stockVo);
 
 }
 

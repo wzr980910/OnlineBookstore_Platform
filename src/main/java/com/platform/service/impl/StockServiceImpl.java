@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
-* @author 邓桂材
+* @author wzr
 * @description 针对表【stock(库存表)】的数据库操作Service实现
 * @createDate 2024-01-14 16:56:54
 */
@@ -23,22 +23,33 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, Stock>
     @Autowired
     private void setStockServiceImpl(StockMapper stockMapper){this.stockMapper = stockMapper;}
 
-    /*查询库存*/
+    /**
+     * 查询库存
+     */
     @Override
     public Page<StockVo> selectStock(StockVo stockVo) {
         //分页
-        Page<StockVo> page = new Page<>(stockVo.getPageNum(), stockVo.getPageSize());
+        Page<StockVo> page = new Page<>(stockVo.getCurrent(), stockVo.getSize());
         //查询
         stockMapper.selectStock(page, stockVo);
         return page;
     }
 
-    /*入库*/
+    /**
+     * 入库
+     */
     @Override
-    public boolean warehousing(Long id, Integer stockNum) {
+    public int warehousing(Long id, Integer stockNum) {
         //通过mapper层入库
-        stockMapper.warehousing(id,stockNum);
-        return false;
+        return stockMapper.warehousing(id,stockNum);
+    }
+
+    /**
+     * 查询库存总数
+     */
+    @Override
+    public StockVo selectTotal(StockVo stockVo) {
+        return stockMapper.selectTotal(stockVo);
     }
 }
 

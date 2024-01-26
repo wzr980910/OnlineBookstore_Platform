@@ -37,4 +37,9 @@ public interface OrdersShowService extends IService<OrdersShow> {
      * 查询详情
      */
     OrdersDetails getDetailsById(Long orderId);
+
+    /**
+     * 查询订单数量
+     */
+    OrdersShowVo selectTotal(OrdersShowVo ordersShowVo);
 }

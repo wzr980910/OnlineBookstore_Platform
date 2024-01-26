@@ -26,14 +26,14 @@
     <!--(批量)注销-->
     <update id="removeUsersById">
         <foreach collection="users" item="user" separator=";">
-            update book set isDeleted = #{user.isDeleted},updateTime = #{user.updateTime} where id = #{user.id}
+            update book set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
         </foreach>
     </update>
 
     <!--(批量)登记-->
     <update id="listUsersById">
         <foreach collection="users" item="user" separator=";">
-            update book set isDeleted = #{user.isDeleted},updateTime = #{user.updateTime} where id = #{user.id}
+            update book set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
         </foreach>
     </update>
 
@@ -56,12 +56,34 @@
             <if test="userVo.isDeleted != null">
                 and isDeleted = #{userVo.isDeleted}
             </if>
-            limit #{userVo.pageNum},#{userVo.pageSize}
+            limit #{userVo.current},#{userVo.size}
         </where>
     </select>
 
     <!--查询用户详情-->
     <select id="getUserDetailsById" resultType="com.platform.pojo.vo.UserVo">
         select * from user where id = #{id}
+    </select>
+
+    <!--查询用户数量-->
+    <select id="selectTotal" resultType="com.platform.pojo.vo.UserVo">
+        select count(*) from user
+        <where>
+            <if test="userVo.accountNumber != null">
+                accountNumber like CONCAT('%',#{userVo.accountNumber},'%')
+            </if>
+            <if test="userVo.userName != null">
+                and userName like CONCAT('%',#{userVo.userName},'%')
+            </if>
+            <if test="userVo.gender != null">
+                and gender = CONCAT('%',#{userVo.gender},'%')
+            </if>
+            <if test="userVo.phoneNumber != null">
+                and phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')
+            </if>
+            <if test="userVo.isDeleted != null">
+                and isDeleted = #{userVo.isDeleted}
+            </if>
+        </where>
     </select>
 </mapper>

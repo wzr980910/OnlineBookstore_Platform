@@ -16,15 +16,19 @@ import java.util.Map;
 public interface PublishingHouseService extends IService<PublishingHouse> {
 
     //添加出版社
-    boolean addPublish(PublishingHouse publishingHouse);
+    int addPublish(PublishingHouse publishingHouse);
 
     //(批量)删除
-    boolean removePublishsById(List<PublishingHouse> publishingHouses);
+    int removePublishsById(List<PublishingHouse> publishingHouses);
 
     //(批量)登记出版社
     boolean listPublishsById(List<PublishingHouse> publishingHouses);
 
     boolean updatePublish(PublishingHouse publishingHouse);
 
+    //查询出版社
     IPage<PublishingHouseVo> selectPublish(PublishingHouseVo publishingHouseVo);
+
+    //查询出版社总数
+    PublishingHouseVo selectNumber(PublishingHouseVo publishingHouseVo);
 }

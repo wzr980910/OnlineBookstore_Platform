@@ -2,10 +2,7 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.platform.mapper.BookMapper;
-import com.platform.mapper.BookTypeMapper;
 import com.platform.pojo.Admin;
-import com.platform.pojo.Book;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.service.AdminService;
 import com.platform.mapper.AdminMapper;
@@ -13,7 +10,6 @@ import com.platform.util.AliOssUtil;
 import com.platform.util.JwtHelper;
 import com.platform.util.MD5Util;
 import com.platform.util.result.RestResult;
-import com.platform.util.result.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +35,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
 
     private AdminMapper adminMapper;
     private JwtHelper jwtHelper;
-
     private AliOssUtil aliOssUtil;
     @Autowired
     private void setAdminServiceImpl(AdminMapper adminMapper){this.adminMapper = adminMapper;}
@@ -106,13 +101,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
     @Override
     public Page<AdminVo> selectAdmin(AdminVo adminVo) {
         //分页
-        Page<AdminVo> page = new Page<>(adminVo.getPageNum(), adminVo.getPageSize());
+        Page<AdminVo> page = new Page<>(adminVo.getCurrent(), adminVo.getSize());
         //查询
         adminMapper.selectAdmin(page, adminVo);
         return page;
     }
 
-    //批量注销
+    /**
+     * 批量注销
+     */
     @Override
     public int removeAdminsById(List<Admin> admins) {
         //设置注销状态
@@ -124,7 +121,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         return adminMapper.removeAdminsById(admins);
     }
 
-    //批量登记
+    /**
+     * 批量登记
+     */
     @Override
     public int listAdminsById(List<Admin> admins) {
         //设置登录状态
@@ -136,6 +135,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         return adminMapper.listAdminsById(admins);
     }
 
+    /**
+     * 上传管理员头像
+     */
     @Override
     public int uploadAdminImg(Long adminId, MultipartFile file) {
         String basePath = "adminPicture/";
@@ -146,5 +148,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
             throw new RuntimeException(e);
         }
         return adminMapper.updateAdminImg(upload, adminId);
+    }
+
+    /**
+     * 查询用户数量
+     */
+    @Override
+    public AdminVo selectTotal(AdminVo adminVo) {
+        return adminMapper.selectTotal(adminVo);
     }
 }

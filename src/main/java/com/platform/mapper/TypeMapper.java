@@ -15,6 +15,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TypeMapper extends BaseMapper<Type> {
     IPage<TypeGrade> selectPageType(IPage<?> page);
+
+    Type getIdByName(String type);
 }
 
 

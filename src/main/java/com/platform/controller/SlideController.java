@@ -8,6 +8,8 @@ import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +35,10 @@ public class SlideController {
 
     @PostMapping("/uploadSlide")
     @ApiOperation(value = "轮播图上传即添加轮播图数据", notes = "file 必填")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     public RestResult uploadSlide(@RequestParam(value = "file") MultipartFile file) {
         String basePath = "slidePicture/";
         String filePath = "";
@@ -55,6 +61,10 @@ public class SlideController {
 
     @PostMapping("/updateSlide")
     @ApiOperation(value = "更新轮播图", notes = "id 必填")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     public RestResult updateSlide(@RequestBody Slide slide) {
         Integer rows = slideService.updateSlide(slide);
         if (rows > 0) {
@@ -66,6 +76,10 @@ public class SlideController {
 
     @PostMapping("/deleteSlide")
     @ApiOperation(value = "删除轮播图", notes = "可以删除一个，也可以删除多个")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     public RestResult deleteSlide(String[] slideIdsList) {
         List<String> strings = Arrays.asList(slideIdsList);
         Integer rows = slideService.deleteSlide(strings);
@@ -78,6 +92,10 @@ public class SlideController {
 
     @GetMapping("/queryAllSlide")
     @ApiOperation(value = "分页查询轮播图", notes = "分页查询")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     public RestResult queryAllSlide(@RequestParam(defaultValue = "1") Integer currentPage,
                                     @RequestParam(defaultValue = "10") Integer size) {
         Map<String, Object> map = slideService.querySlidePage(currentPage, size);
@@ -87,6 +105,5 @@ public class SlideController {
             return RestResult.failure(ResultCode.OPERATION_FAILURE, "查询失败");
         }
     }
-
 
 }

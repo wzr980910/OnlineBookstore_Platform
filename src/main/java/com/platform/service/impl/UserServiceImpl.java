@@ -24,7 +24,7 @@ import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
 
 /**
- * @author 邓桂材
+ * @author wzr
  * @description 针对表【user(书城客户)】的数据库操作Service实现
  * @createDate 2024-01-14 16:56:54
  */
@@ -34,48 +34,62 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     private UserMapper userMapper;
     @Autowired
-    private void setUserServiceImpl(UserMapper userMapper){this.userMapper = userMapper;}
+    private void setUserMapper(UserMapper userMapper){this.userMapper = userMapper;}
 
-    /*(批量)注销用户*/
+    /**
+     * (批量)注销用户
+     */
     @Override
-    public boolean removeUsersById(List<User> users) {
+    public int removeUsersById(List<User> users) {
         //设置注销状态
         for(User user : users){
             user.setIsDeleted(IS_DELETE.getCode());
             user.setUpdateTime(new Date());
         }
         //mapper层设置注销状态
-        userMapper.removeUsersById(users);
-        return true;
+        return userMapper.removeUsersById(users);
     }
 
-    /*(批量)登记*/
+    /**
+     * (批量)登记
+     */
     @Override
-    public boolean listUsersById(List<User> users) {
+    public int listUsersById(List<User> users) {
         //设置登记状态
         for(User user : users){
             user.setIsDeleted(NO_DELETE.getCode());
             user.setUpdateTime(new Date());
         }
         //mapper层设置登记状态
-        userMapper.listUsersById(users);
-        return true;
+        return userMapper.listUsersById(users);
     }
 
-    /*根据条件查询用户信息*/
+    /**
+     * 根据条件查询用户信息
+     */
     @Override
     public Page<UserVo> selectUser(UserVo userVo) {
         //分页
-        Page<UserVo> page = new Page<>(userVo.getPageNum(), userVo.getPageSize());
+        Page<UserVo> page = new Page<>(userVo.getCurrent(), userVo.getSize());
         //查询
         userMapper.selectUser(page, userVo);
         return page;
     }
 
-    /*获取用户详情*/
+    /**
+     * 获取用户详情
+     */
     @Override
     public UserVo getUserDetailsById(Long id) {
         return userMapper.getUserDetailsById(id);
+    }
+
+    /**
+     * 查询用户数量
+     */
+    @Override
+    public UserVo selectTotal(UserVo userVo) {
+        return userMapper.selectTotal(userVo);
     }
 
 }

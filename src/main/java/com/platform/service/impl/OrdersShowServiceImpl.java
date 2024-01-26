@@ -25,12 +25,12 @@ public class OrdersShowServiceImpl extends ServiceImpl<OrdersShowMapper, OrdersS
     private OrdersShowMapper ordersShowMapper;
 
     @Autowired
-    public void setOrdersShowServiceImpl(OrdersShowMapper ordersShowMapper){this.ordersShowMapper = ordersShowMapper;}
+    public void setOrdersShowMapper(OrdersShowMapper ordersShowMapper){this.ordersShowMapper = ordersShowMapper;}
 
     @Override
     public Page<OrdersShowVo> selectOrders(OrdersShowVo ordersShowVo) {
         //分页
-        Page<OrdersShowVo> page = new Page<>(ordersShowVo.getPageNum(), ordersShowVo.getPageSize());
+        Page<OrdersShowVo> page = new Page<>(ordersShowVo.getCurrent(), ordersShowVo.getSize());
         //查询
         ordersShowMapper.selectOrders(page, ordersShowVo);
         return page;
@@ -61,6 +61,11 @@ public class OrdersShowServiceImpl extends ServiceImpl<OrdersShowMapper, OrdersS
     public OrdersDetails getDetailsById(Long orderId) {
         //通过mapper层查询
         return ordersShowMapper.getDetailsById(orderId);
+    }
+
+    @Override
+    public OrdersShowVo selectTotal(OrdersShowVo ordersShowVo) {
+        return ordersShowMapper.selectTotal(ordersShowVo);
     }
 }
 

@@ -29,21 +29,40 @@
             left join publishing_house on book.publishId =publishing_house.id
         <where>
             <if test="stockVo.bookName != null">
-                stock.bookName like CONCAT('%',#{StockVo.bookName},'%')
+                stock.bookName like CONCAT('%',#{stockVo.bookName},'%')
             </if>
-            <if test    ="stockVo.ISBN != null">
-                and book.ISBN = #{StockVo.ISBN}
+            <if test="stockVo.ISBN != null">
+                and book.ISBN = #{stockVo.isbn}
             </if>
             <if test="stockVo.publishName != null">
-                and publishing_house.publishName like CONCAT('%',#{StockVo.publishName},'%')
-            </if>>
-            limit #{stockVo.pageNum},#{stockVo.pageSize}
+                and publishing_house.publishName like CONCAT('%',#{stockVo.publishName},'%')
+            </if>
+        </where>
+            limit #{stockVo.current},#{stockVo.size}
+    </select>
+
+    <!--查询库存数量-->
+    <select id="selectTotal" resultType="com.platform.pojo.vo.StockVo">
+        select count(*) as total
+        from stock
+        left join book on stock.bookId = book.id
+        left join publishing_house on book.publishId =publishing_house.id
+        <where>
+            <if test="stockVo.bookName != null">
+                stock.bookName like CONCAT('%',#{stockVo.bookName},'%')
+            </if>
+            <if test="stockVo.ISBN != null">
+                and book.ISBN = #{stockVo.isbn}
+            </if>
+            <if test="stockVo.publishName != null">
+                and publishing_house.publishName like CONCAT('%',#{stockVo.publishName},'%')
+            </if>
         </where>
     </select>
 
     <!--入库-->
     <update id="warehousing">
-        update stock set stockNum = stockNum + #{stockNum} where id = #{id}
+        update stock set stockNum = stockNum + #{stockNum},udpateTime = now() where id = #{id}
     </update>
 
 </mapper>

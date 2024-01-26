@@ -4,6 +4,9 @@ import com.platform.pojo.HomePage;
 import com.platform.service.HomePageService;
 import com.platform.util.result.RestResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +28,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/homePage")
 public class HomePageController {
-
     private HomePageService homePageService;
-
     @Autowired
-    public void setHomePageService(HomePageService homePageService){this.homePageService = homePageService;}
+    public void setHomePageService(HomePageService homePageService){
+        this.homePageService = homePageService;
+    }
 
+    @ApiOperation(value = "获取首页信息", notes = "无参")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/getInfo")
     public RestResult getInfo(){
         //获取总用户数
@@ -64,7 +72,6 @@ public class HomePageController {
         for (int i = 0;i < ordersNumber.size(); i++){
             ordersArray[i] = ordersNumber.get(i).getOrdersNumber();
         }
-
         //封装返回值
         HashMap<String,Object> map = new HashMap<>();
         map.put("totalUsers",totalUsers);

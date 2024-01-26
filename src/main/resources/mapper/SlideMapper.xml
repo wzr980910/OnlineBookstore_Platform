@@ -18,7 +18,7 @@
 
     <update id="deleteBatchSlideIds" parameterType="java.util.List">
         update slide
-        set slide.isDelete = 1
+        set slide.isDelete = 1,updateTime = now()
         where slide.id in
         <foreach collection="list" item="id" separator="," open="(" close=")">
             #{id}

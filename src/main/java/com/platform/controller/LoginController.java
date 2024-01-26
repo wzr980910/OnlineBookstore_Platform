@@ -28,7 +28,6 @@ public class LoginController {
     @Autowired
     private AdminService adminService;
 
-    //管理员登录操作
     @PostMapping("/login")
     @ApiOperation(value = "登录", notes = "登录")
     public RestResult login(@RequestBody Admin admin) {

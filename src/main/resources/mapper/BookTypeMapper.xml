@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bookStore.mapper.BookTypeMapper">
+<mapper namespace="com.platform.mapper.BookTypeMapper">
 
     <resultMap id="BaseResultMap" type="com.platform.pojo.BookType">
             <id property="id" column="id" jdbcType="BIGINT"/>
@@ -15,10 +15,10 @@
     </sql>
 
     <insert id="addBookType">
-        insert into book_type (bookId,typeId) values (#{bookId},#{typeId})
+        insert into book_type (bookId,typeId) values (#{bookVo.id},#{bookVo.typeId})
     </insert>
 
     <update id="updateBookType">
-        update book_type set typeId = #{typeId} where bookId = #{bookId}
+        update book_type set typeId = #{bookVo.typeId} where bookId = #{bookVo.id}
     </update>
 </mapper>

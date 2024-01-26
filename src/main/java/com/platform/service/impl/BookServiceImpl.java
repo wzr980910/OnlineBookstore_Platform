@@ -4,17 +4,24 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.platform.mapper.BookTypeMapper;
+import com.platform.mapper.PublishingHouseMapper;
+import com.platform.mapper.TypeMapper;
 import com.platform.pojo.Admin;
 import com.platform.pojo.Book;
 import com.platform.pojo.BookType;
+import com.platform.pojo.Type;
 import com.platform.pojo.vo.BookVo;
+import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.BookService;
 import com.platform.mapper.BookMapper;
+import com.platform.util.AliOssUtil;
 import com.platform.util.CreateISBNUtil;
 import com.platform.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,22 +40,36 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     implements BookService{
     private BookMapper bookMapper;
     private BookTypeMapper bookTypeMapper;
+    private AliOssUtil aliOssUtil;
+    private TypeMapper typeMapper;
 
     @Autowired
     private void setBookMapper(BookMapper bookMapper){this.bookMapper = bookMapper;}
     @Autowired
     private void setBookTypeMapper(BookTypeMapper bookTypeMapper){this.bookTypeMapper = bookTypeMapper;}
-
-    @Override
-    public Book getBookByISBN(String ISBN) {
-        //通过mapper层进行查询
-        return bookMapper.getBookByISBN(ISBN);
+    @Autowired
+    public void setAliOssUtil(AliOssUtil aliOssUtil) {
+        this.aliOssUtil = aliOssUtil;
+    }
+    @Autowired
+    public void setTypeMapper(TypeMapper typeMapper) {
+        this.typeMapper = typeMapper;
     }
 
+    /**
+     * 根据isbn号查询
+     */
+    @Override
+    public Book getBookByISBN(String isbn) {
+        //通过mapper层进行查询
+        return bookMapper.getBookByISBN(isbn);
+    }
+
+    /**
+     * 添加图书
+     */
     @Override
     public int addBook(BookVo bookVo) {
-        Book book = null;
-        BookType bookType = null;
         int row = 0;
         //首先存入图书,如果成功则将图书与对应的类型关系存入book_type表中
         //创建ISBN唯一标识码并判断是否唯一
@@ -59,11 +80,15 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
             bookISBN = CreateISBNUtil.createISBN();
             isOnly = getBookByISBN(bookISBN);
         }
+        bookVo.setIsbn(bookISBN);
         bookVo.setIsDeleted(NO_DELETE.getCode());
+        //获取类型id
+        Type type = typeMapper.getIdByName(bookVo.getCategory());
+        bookVo.setTypeId(type.getId());
         //通过mapper层增添数据
-        bookMapper.addBook(bookVo);
+        bookVo.setId(bookMapper.addBook(bookVo));
         //判断是否添加成功
-        Book isExisted = bookMapper.getBookByISBN(bookVo.getISBN());
+        Book isExisted = bookMapper.getBookByISBN(bookVo.getIsbn());
         if (isExisted != null){
             //添加成功,将图书与类型信息添加到book_type表中
             return bookTypeMapper.addBookType(bookVo);
@@ -77,12 +102,13 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
      * 查询图书数量
      */
     @Override
-    public BookVo selectNumber(BookVo bookVo) {
-
-        return bookMapper.selectNumber(bookVo);
+    public BookVo selectTotal(BookVo bookVo) {
+        return bookMapper.selectTotal(bookVo);
     }
 
-    //多本图书上架
+    /**
+     * 多本图书上架
+     */
     @Override
     public int listBooksById(List<Book> books){
         //设置上架状态
@@ -94,7 +120,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return bookMapper.listBooksById(books);
     }
 
-    //多本图书下架
+    /**
+     * 多本图书下架
+     */
     @Override
     public int removeBooksById(List<Book> books){
         //设置下架状态
@@ -106,15 +134,23 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return bookMapper.removeBooksById(books);
     }
 
-    //修改图书
+    /**
+     * 修改图书
+     */
     @Override
     public int updateBook(BookVo bookVo) {
         int tureFlag = 1;
         int falseFlag = 0;
+        //获取类型id
+        if (bookVo.getCategory() != null) {
+            Type type = typeMapper.getIdByName(bookVo.getCategory());
+            bookVo.setTypeId(type.getId());
+        }
+        //修改图书
         int row = bookMapper.updateBook(bookVo);
         if (row > 0){
             //book表中数据修改成功
-            if(bookVo.getTypeId() != 0){
+            if(bookVo.getTypeId() != null){
                 //获取bookType数据,修改图书类型
                 return bookTypeMapper.updateBookType(bookVo);
             }
@@ -140,7 +176,17 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return bookMapper.getBookDetailsById(id);
     }
 
-
+    @Override
+    public String uploadBookImg(MultipartFile file) {
+        String basePath = "bookPicture/";
+        String bookPictureUrl="";
+        try {
+            bookPictureUrl = aliOssUtil.upload(file.getBytes(), file, basePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return bookPictureUrl;
+    }
 }
 
 

@@ -34,29 +34,21 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
     private void setPublishingHouseServiceImpl(PublishingHouseMapper publishingHouseMapper){this.publishingHouseMapper = publishingHouseMapper;}
 
     @Override
-    public boolean addPublish(PublishingHouse publishingHouse) {
+    public int addPublish(PublishingHouse publishingHouse) {
         //通过mapper层增添数据
-        long id = publishingHouseMapper.addPublish(publishingHouse);
-        //判断是否添加成功
-        PublishingHouse isExisted = publishingHouseMapper.getPublishingHouseById(id);
-        if (isExisted != null){
-            //添加成功
-            return true;
-        }
-        return false;
+        return publishingHouseMapper.addPublish(publishingHouse);
     }
 
     /*批量删除*/
     @Override
-    public boolean removePublishsById(List<PublishingHouse> publishingHouses) {
+    public int removePublishsById(List<PublishingHouse> publishingHouses) {
         //设置删除状态
         for(PublishingHouse publishingHouse : publishingHouses){
             publishingHouse.setIsDeleted(IS_DELETE.getCode());
             publishingHouse.setUpdateTime(new Date());
         }
         //mapper层设置下架状态
-        publishingHouseMapper.removePublishsById(publishingHouses);
-        return true;
+        return publishingHouseMapper.removePublishsById(publishingHouses);
     }
 
     /*批量登记*/
@@ -83,10 +75,15 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
     @Override
     public Page<PublishingHouseVo> selectPublish(PublishingHouseVo publishingHouseVo) {
         //分页
-        Page<PublishingHouseVo> page = new Page<>(publishingHouseVo.getPageNum(), publishingHouseVo.getPageSize());
+        Page<PublishingHouseVo> page = new Page<>(publishingHouseVo.getCurrent(), publishingHouseVo.getSize());
         //查询
         publishingHouseMapper.selectPublish(page, publishingHouseVo);
         return page;
+    }
+
+    @Override
+    public PublishingHouseVo selectNumber(PublishingHouseVo publishingHouseVo) {
+        return publishingHouseMapper.selectNumber(publishingHouseVo);
     }
 }
 

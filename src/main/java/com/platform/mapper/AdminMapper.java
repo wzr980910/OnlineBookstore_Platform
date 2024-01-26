@@ -20,16 +20,30 @@ import java.util.List;
 */
 @Mapper
 public interface AdminMapper extends BaseMapper<Admin> {
+
+    /**
+     * 判断用户登录
+     */
     Admin login(String adminName, String password);
 
+    /**
+     * 根据用户名查询账号
+     */
     Admin getByAdminName(String adminName);
 
-    Admin getById(Long id);
-
+    /**
+     * 添加用户
+     */
     int addAdmin(Admin admin);
 
+    /**
+     * 注销用户
+     */
     int removeById(Long id,int isDeleted,Date updateTime);
 
+    /**
+     * 注销用户
+     */
     int removeAdminsById(List<Admin> admins);
 
     int listAdminsById(List<Admin> admins);
@@ -39,6 +53,8 @@ public interface AdminMapper extends BaseMapper<Admin> {
     IPage<AdminVo> selectAdmin(IPage<?> page, AdminVo adminVo);
 
     int updateAdminImg(@Param("imgPath") String imgPath,@Param("adminId") Long adminId);
+
+    AdminVo selectTotal(@Param("admin") AdminVo adminVo);
 }
 
 

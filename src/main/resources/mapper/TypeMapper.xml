@@ -19,4 +19,8 @@
                b.type as parentType
         from type as a,type as b where b.id = a.parentId
     </select>
+
+    <select id="getIdByName" resultType="com.platform.pojo.Type">
+        select id from type where type = #{type}
+    </select>
 </mapper>

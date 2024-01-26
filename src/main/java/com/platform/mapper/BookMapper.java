@@ -20,22 +20,22 @@ import java.util.List;
 @Mapper
 public interface BookMapper extends BaseMapper<Book> {
 
-    Book getBookByISBN(String ISBN);
+    Book getBookByISBN(String isbn);
 
-
-    void addBook(BookVo bookVo);
+    Long addBook(@Param("bookVo")BookVo bookVo);
 
     int listBooksById(List<Book> books);
 
     int removeBooksById(List<Book> books);
 
-    int updateBook(BookVo bookVo);
+    int updateBook(@Param("bookVo")BookVo bookVo);
 
     IPage<BookVo> selectBookPage(IPage<?> page,BookVo bookVo);
 
     BookVo getBookDetailsById(Long id);
 
-    BookVo selectNumber(@Param("bookVo")BookVo bookVo);
+    BookVo selectTotal(@Param("bookVo")BookVo bookVo);
+
 }
 
 

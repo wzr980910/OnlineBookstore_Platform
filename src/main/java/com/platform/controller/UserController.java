@@ -9,6 +9,9 @@ import com.platform.util.result.RestResult;
 import com.platform.service.UserService;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +31,16 @@ public class UserController {
     @Autowired
     private void setUserController(UserService userService){this.userService = userService;}
 
-    //用户账号注销(批量注销)
+    @ApiOperation(value = "用户账号注销(批量注销)", notes = "传参类型为List<User>")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/removeUsers")
     public RestResult removeUsersById(@RequestBody List<User> users){
         //注销用户
-        boolean isDeleted = userService.removeUsersById(users);
-        if (isDeleted){
+        int row = userService.removeUsersById(users);
+        if (row > 0){
             //注销成功
             return RestResult.success();
         }else {
@@ -42,12 +49,17 @@ public class UserController {
         }
     }
 
-    //用户账号登记(批量登记)
+    //
+    @ApiOperation(value = "用户账号登记(批量登记)", notes = "传参类型为List<User>")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/listUsers")
     public RestResult listUsersById(@RequestBody List<User> users){
         //注销用户
-        boolean isDeleted = userService.listUsersById(users);
-        if (isDeleted){
+        int row = userService.listUsersById(users);
+        if (row > 0){
             //注销成功
             return RestResult.success();
         }else {
@@ -56,21 +68,31 @@ public class UserController {
         }
     }
 
-    //用户条件查找
+    @ApiOperation(value = "用户条件查找", notes = "传参类型为UserVo")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/selectUser")
     public RestResult selectUser(@RequestBody UserVo userVo) {
         IPage<UserVo> page = userService.selectUser(userVo);
+        UserVo userTotal = userService.selectTotal(userVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
+            pageInfoMap.put("total", userTotal.getTotal());
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
             return RestResult.failure(OPERATION_FAILURE);
         }
     }
-    //用户详情信息
+    @ApiOperation(value = "用户详情信息", notes = "传参类型为id")
+    @ApiResponses({
+            @ApiResponse(code=200,message = "操作成功"),
+            @ApiResponse(code = 101,message = "操作失败"),
+    })
     @PostMapping("/UserDetails")
     public RestResult getUserDetails(@RequestParam Long id){
         UserVo userVo = userService.getUserDetailsById(id);

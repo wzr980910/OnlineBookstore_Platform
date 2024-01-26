@@ -35,17 +35,22 @@ public class AdminVo {
     @ApiModelProperty(value = "管理员权限",required = true,example = "1")
     private Integer authority;
 
-    @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @TableField(fill = FieldFill.UPDATE)
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
     @ApiModelProperty(value = "删除状态",required = false,example = "0")
     private Integer isDeleted;
 
-    private Integer pageNum = 1;
+    @ApiModelProperty(value="分页查找时的页数")
+    private Integer current;
 
-    private Integer pageSize = 10;
+    @ApiModelProperty(value="分页查找时的页容量")
+    private Integer size;
+
+    @ApiModelProperty(value="库存数量")
+    private Integer total;
 
 }

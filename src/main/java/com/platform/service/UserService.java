@@ -19,15 +19,28 @@ import java.util.Map;
 @Service
 public interface UserService extends IService<User> {
 
-    //(批量)注销
-    boolean removeUsersById(List<User> users);
+    /**
+     * (批量)注销
+     */
+    int removeUsersById(List<User> users);
 
-    //(批量)登记
-    boolean listUsersById(List<User> users);
+    /**
+     * (批量)登记
+     */
+    int listUsersById(List<User> users);
 
-    //查询
+    /**
+     * 条件查询用户
+     */
     Page<UserVo> selectUser(UserVo userVo);
 
-    //详情信息
+    /**
+     * 查询特定用户详情信息
+     */
     UserVo getUserDetailsById(Long id);
+
+    /**
+     * 根据条件查询用户数量
+     */
+    UserVo selectTotal(UserVo userVo);
 }

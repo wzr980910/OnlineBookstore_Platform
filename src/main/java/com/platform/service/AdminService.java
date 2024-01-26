@@ -18,30 +18,53 @@ import java.util.Map;
 */
 public interface AdminService extends IService<Admin> {
 
-    //校验登录操作
+    /**
+     * 校验登录操作
+     */
     RestResult login(String adminName, String password);
 
-    //校验账号是否存在
+    /**
+     * 校验账号是否存在
+     */
     Admin getByAdminName(String adminName);
 
-    //将账号添加到数据库中
+    /**
+     * 将账号添加到数据库中
+     */
     int addAdmin(Admin admin);
 
-    //删除账号
+    /**
+     * 删除账号
+     */
     int removeAdminById(Long id);
 
-    //修改管理员账号
+    /**
+     * 修改管理员账号
+     */
     int updateAdmin(Admin admin);
 
-    //条件查找账号
+    /**
+     * 条件查找账号
+     */
     Page<AdminVo> selectAdmin(AdminVo adminVo);
 
-    //批量注销
+    /**
+     * 批量注销
+     */
     int removeAdminsById(List<Admin> admins);
 
-    //批量登记
+    /**
+     * 批量登记
+     */
     int listAdminsById(List<Admin> admins);
 
+    /**
+     * 上传头像
+     */
     int uploadAdminImg(Long adminId, MultipartFile file);
 
+    /**
+     * 查询管理员数量
+     */
+    AdminVo selectTotal(AdminVo adminVo);
 }

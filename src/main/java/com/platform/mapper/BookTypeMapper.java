@@ -4,6 +4,7 @@ import com.platform.pojo.BookType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author 邓桂材
@@ -14,9 +15,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BookTypeMapper extends BaseMapper<BookType> {
 
-    int addBookType(BookVo bookVo);
+    int addBookType(@Param("bookVo") BookVo bookVo);
 
-    int updateBookType(BookVo bookVo);
+    int updateBookType(@Param("bookVo")BookVo bookVo);
 }
 
 

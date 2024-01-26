@@ -72,7 +72,7 @@
             <if test="adminVo.isDeleted != null">
                 and isDeleted = #{adminVo.isDeleted}
             </if>>
-            limit #{adminVo.pageNum},#{adminVo.pageSize}
+            limit #{adminVo.current},#{adminVo.size}
         </where>
     </select>
 
@@ -90,9 +90,25 @@
         </foreach>
     </update>
 
+    <!--上传管理员头像-->
     <update id="updateAdminImg">
         update admin set picture = #{imgPath} where id = #{adminId}
     </update>
 
-
+    <!--查询管理员数量-->
+    <select id="selectTotal" resultType="com.platform.pojo.vo.AdminVo">
+        select count(*) from admin
+        <where>
+            <if test="adminVo.adminName != null">
+                adminName like CONCAT('%',#{adminVo.adminName},'%')
+            </if>
+            <if test="adminVo.authority != null">
+                and authority = #{adminVo.authority}
+            </if>
+            <if test="adminVo.isDeleted != null">
+                and isDeleted = #{adminVo.isDeleted}
+            </if>>
+            limit #{adminVo.current},#{adminVo.size}
+        </where>
+    </select>
 </mapper>

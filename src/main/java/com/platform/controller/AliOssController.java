@@ -32,8 +32,9 @@ import static com.platform.util.result.ResultCode.OPERATION_FAILURE;
 @Api(value = "上传oss存储对象接口", tags = "上传oss", description = "上传oss测试接口")
 public class AliOssController {
     //    自动装配阿里云oss工具类
-    @Autowired
     private AliOssUtil aliOssUtil;
+    @Autowired
+    public void setAliOssUtil(AliOssUtil aliOssUtil){this.aliOssUtil = aliOssUtil;}
 
     @ApiOperation(value = "图书封面上传", notes = "只需要图片文件")
     @ApiResponses({
