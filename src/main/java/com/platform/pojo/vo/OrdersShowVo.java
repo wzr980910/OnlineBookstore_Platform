@@ -1,7 +1,5 @@
 package com.platform.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -79,7 +77,4 @@ public class OrdersShowVo {
 
     @ApiModelProperty(value="分页查找时的页容量")
     private Integer size;
-
-    @ApiModelProperty(value="订单数量")
-    private Integer total;
 }

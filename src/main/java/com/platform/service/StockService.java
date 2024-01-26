@@ -16,6 +16,6 @@ public interface StockService extends IService<Stock> {
 
     int warehousing(Long id,Integer stockNum);
 
-    StockVo selectTotal(StockVo stockVo);
+    Integer selectTotal(StockVo stockVo);
 
 }

@@ -26,7 +26,7 @@
         createTime,updateTime,isDeleted
     </sql>
 
-    <select id="getBookByISBN" resultType="com.platform.pojo.Book">
+    <select id="getBookByISBN" resultType="com.platform.pojo.vo.BookVo">
         select id,bookName from book where ISBN = #{isbn}
     </select>
 
@@ -34,11 +34,12 @@
         select id,bookName,isDelted from book where id = #{id}
     </select>
 
-    <insert id="addBook" useGeneratedKeys="true" keyProperty="id">
-        insert into book (ISBN,bookName,author,publishId,publishDate,price,picture,content,
-                          createTime,isDeleted) values (#{bookVo.isbn},#{bookVo.bookName},#{bookVo.author},#{bookVo.publishId},
-                                                        #{bookVo.publishDate},#{bookVo.price},#{bookVo.picture},#{bookVo.content},
-                                                        now(),#{bookVo.isDeleted})
+    <insert id="addBook">
+        INSERT INTO book ( ISBN, bookName, author, publishId, publishDate, price, picture, content, createTime, isDeleted )
+        VALUES
+            (#{bookVo.isbn},#{bookVo.bookName},#{bookVo.author},#{bookVo.publishId},
+             #{bookVo.publishDate},#{bookVo.price},#{bookVo.picture},#{bookVo.content},
+             now(),#{bookVo.isDeleted})
     </insert>
 
     <!--批量上架图书-->
@@ -110,10 +111,6 @@
             <if test="bookVo.priceHigh != null">
                 and price between #{bookVo.priceLow} and #{bookVo.priceHigh}
             </if>
-            <!--如果价格不存在价格上限，查询大于价格下限的数据，默认价格下限为0 -->
-            <if test="bookVo.priceHigh == null">
-                and price &gt;= #{bookVo.priceLow}
-            </if>
             <!-- 如果出版社名不为空，查询指定出版社名称的数据-->
             <if test="bookVo.publishName != null">
                 and publishName like CONCAT('%',#{bookVo.publishName},'%')
@@ -129,8 +126,8 @@
         limit #{bookVo.current},#{bookVo.size}
     </select>
 
-    <select id="selectTotal" resultType="com.platform.pojo.vo.BookVo">
-        select COUNT(*) as total
+    <select id="selectTotal" resultType="Integer">
+        select COUNT(*)
         from book
         <!-- 需要联表查询出版社名称-->
         left join publishing_house on book.publishId =publishing_house.id
@@ -166,10 +163,6 @@
             <!-- 有价格上限，查询价格下限和价格上线之间的数据-->
             <if test="bookVo.priceHigh != null">
                 and price between #{bookVo.priceLow} and #{bookVo.priceHigh}
-            </if>
-            <!--如果价格不存在价格上限，查询大于价格下限的数据，默认价格下限为0 -->
-            <if test="bookVo.priceHigh == null">
-                and price &gt;= #{bookVo.priceLow}
             </if>
             <!-- 如果出版社名不为空，查询指定出版社名称的数据-->
             <if test="bookVo.publishName != null">

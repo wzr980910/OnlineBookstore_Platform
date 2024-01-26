@@ -2,11 +2,10 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.platform.mapper.StockMapper;
 import com.platform.pojo.Stock;
-import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.StockVo;
 import com.platform.service.StockService;
-import com.platform.mapper.StockMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,7 @@ public class StockServiceImpl extends ServiceImpl<StockMapper, Stock>
      * 查询库存总数
      */
     @Override
-    public StockVo selectTotal(StockVo stockVo) {
+    public Integer selectTotal(StockVo stockVo) {
         return stockMapper.selectTotal(stockVo);
     }
 }

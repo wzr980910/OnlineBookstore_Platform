@@ -1,14 +1,15 @@
 package com.platform.pojo;
 
-import com.baomidou.mybatisplus.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @TableName user
@@ -28,7 +29,7 @@ public class User implements Serializable {
     private String password;
 
     @Pattern(regexp = "^[a-zA-Z0-9]{3,20}$",message = "用户名只包含字母和数字，长度在3到20个字符之间")
-    private String username;
+    private String userName;
 
     @NotBlank(message="手机号不能为空")
     @Pattern(regexp="^1\\d{10}$", message="请输入正确的手机格式")

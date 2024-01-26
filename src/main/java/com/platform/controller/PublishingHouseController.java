@@ -2,10 +2,8 @@ package com.platform.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.PublishingHouse;
-import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.PublishingHouseService;
-import com.platform.service.TypeService;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
@@ -13,7 +11,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -122,12 +123,12 @@ public class PublishingHouseController {
     @PostMapping("/selectPublish")
     public RestResult selectPublish(@RequestBody PublishingHouseVo publishingHouseVo) {
         IPage<PublishingHouseVo> page = publishingHouseService.selectPublish(publishingHouseVo);
-        PublishingHouseVo publishingHouseTotal = publishingHouseService.selectNumber(publishingHouseVo);
+        Integer publishingHouseTotal = publishingHouseService.selectNumber(publishingHouseVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
-            pageInfoMap.put("total", publishingHouseTotal.getTotal());
+            pageInfoMap.put("total", publishingHouseTotal);
 
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {

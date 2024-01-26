@@ -1,16 +1,11 @@
 package com.platform.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -36,7 +31,7 @@ public class UserVo {
     private String password;
 
     @ApiModelProperty(value="用户名")
-    private String username;
+    private String userName;
 
     @ApiModelProperty(value="用户手机号")
     private String phoneNumber;
@@ -45,7 +40,7 @@ public class UserVo {
     private String picture;
 
     @ApiModelProperty(value="用户性别")
-    private Long gender;
+    private Integer gender;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
@@ -62,6 +57,4 @@ public class UserVo {
     @ApiModelProperty(value="分页查找时的页容量")
     private Integer size;
 
-    @ApiModelProperty(value="用户数量")
-    private Integer total;
 }

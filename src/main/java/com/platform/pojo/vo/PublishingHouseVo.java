@@ -1,7 +1,5 @@
 package com.platform.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -53,6 +51,4 @@ public class PublishingHouseVo {
     @ApiModelProperty(value="图书状态")
     private Integer isDeleted;
 
-    @ApiModelProperty(value="出版社数量")
-    private Integer total;
 }

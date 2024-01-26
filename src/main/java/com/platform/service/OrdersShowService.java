@@ -1,8 +1,8 @@
 package com.platform.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.OrdersShow;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.OrdersShow;
 import com.platform.pojo.respojo.OrdersDetails;
 import com.platform.pojo.vo.OrdersShowVo;
 
@@ -41,5 +41,5 @@ public interface OrdersShowService extends IService<OrdersShow> {
     /**
      * 查询订单数量
      */
-    OrdersShowVo selectTotal(OrdersShowVo ordersShowVo);
+    Integer selectTotal(OrdersShowVo ordersShowVo);
 }

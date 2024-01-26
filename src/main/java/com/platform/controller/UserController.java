@@ -3,10 +3,9 @@ package com.platform.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.User;
-import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.UserVo;
-import com.platform.util.result.RestResult;
 import com.platform.service.UserService;
+import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,13 +55,13 @@ public class UserController {
     })
     @PostMapping("/listUsers")
     public RestResult listUsersById(@RequestBody List<User> users){
-        //注销用户
+        //登记用户
         int row = userService.listUsersById(users);
         if (row > 0){
-            //注销成功
+            //登记成功
             return RestResult.success();
         }else {
-            //注销失败
+            //登记失败
             return RestResult.failure(OPERATION_FAILURE);
         }
     }
@@ -76,12 +74,12 @@ public class UserController {
     @PostMapping("/selectUser")
     public RestResult selectUser(@RequestBody UserVo userVo) {
         IPage<UserVo> page = userService.selectUser(userVo);
-        UserVo userTotal = userService.selectTotal(userVo);
+        Integer userTotal = userService.selectTotal(userVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
-            pageInfoMap.put("total", userTotal.getTotal());
+            pageInfoMap.put("total", userTotal);
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败

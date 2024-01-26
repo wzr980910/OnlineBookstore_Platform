@@ -1,16 +1,12 @@
 package com.platform.mapper;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.Admin;
-import com.platform.pojo.Book;
-import com.platform.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.platform.pojo.User;
 import com.platform.pojo.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,7 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 根据条件查询用户信息
      */
-    IPage<Admin> selectUser(IPage<?> page, UserVo userVo);
+    IPage<UserVo> selectUser(IPage<?> page, @Param("userVo") UserVo userVo);
 
     /**
      * 查询用户详情
@@ -45,7 +41,7 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 查询用户数量
      */
-    UserVo selectTotal(@Param("userVo") UserVo userVo);
+    Integer selectTotal(@Param("userVo") UserVo userVo);
 }
 
 

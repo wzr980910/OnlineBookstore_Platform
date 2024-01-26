@@ -76,7 +76,7 @@
     </select>
 
     <!--查询订单数量-->
-    <select id="selectTotal" resultType="com.platform.pojo.vo.OrdersShowVo">
+    <select id="selectTotal" resultType="Integer">
         select count(*)
         from orders_show as o
         left JOIN user as u on o.userId = u.id

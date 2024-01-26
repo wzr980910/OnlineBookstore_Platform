@@ -1,15 +1,12 @@
 package com.platform.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.platform.pojo.vo.AdminVo;
+import com.platform.pojo.User;
 import com.platform.pojo.vo.UserVo;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.CoderResult;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 邓桂材
@@ -42,5 +39,5 @@ public interface UserService extends IService<User> {
     /**
      * 根据条件查询用户数量
      */
-    UserVo selectTotal(UserVo userVo);
+    Integer selectTotal(UserVo userVo);
 }

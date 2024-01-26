@@ -31,7 +31,7 @@
             <if test="stockVo.bookName != null">
                 stock.bookName like CONCAT('%',#{stockVo.bookName},'%')
             </if>
-            <if test="stockVo.ISBN != null">
+            <if test="stockVo.isbn != '' ">
                 and book.ISBN = #{stockVo.isbn}
             </if>
             <if test="stockVo.publishName != null">
@@ -42,8 +42,8 @@
     </select>
 
     <!--查询库存数量-->
-    <select id="selectTotal" resultType="com.platform.pojo.vo.StockVo">
-        select count(*) as total
+    <select id="selectTotal" resultType="Integer">
+        select count(*)
         from stock
         left join book on stock.bookId = book.id
         left join publishing_house on book.publishId =publishing_house.id
@@ -51,7 +51,7 @@
             <if test="stockVo.bookName != null">
                 stock.bookName like CONCAT('%',#{stockVo.bookName},'%')
             </if>
-            <if test="stockVo.ISBN != null">
+            <if test="stockVo.isbn != '' ">
                 and book.ISBN = #{stockVo.isbn}
             </if>
             <if test="stockVo.publishName != null">
@@ -62,7 +62,14 @@
 
     <!--入库-->
     <update id="warehousing">
-        update stock set stockNum = stockNum + #{stockNum},udpateTime = now() where id = #{id}
+        update stock set stockNum = stockNum + #{stockNum},updateTime = now() where id = #{id}
     </update>
+
+    <!--添加库存信息-->
+    <insert id="addStock">
+        INSERT INTO stock ( bookId, stockNum, bookName, createTime, isDeleted, saleVolume)
+        VALUES
+            (#{bookVo.id},0,#{bookVo.bookName},now(),0,0)
+    </insert>
 
 </mapper>

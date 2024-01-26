@@ -1,15 +1,12 @@
 package com.platform.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * @author wzr
@@ -22,7 +19,7 @@ public interface BookService extends IService<Book> {
     /**
      * 通过ISBN查询图书
      */
-    Book getBookByISBN(String isbn);
+    BookVo getBookByISBN(String isbn);
 
     /**
      * 添加图书
@@ -32,7 +29,7 @@ public interface BookService extends IService<Book> {
     /**
      * 查询图书数量
      */
-    BookVo selectTotal(BookVo bookVo);
+    Integer selectTotal(BookVo bookVo);
 
     /**
      * 批量上架
@@ -60,8 +57,4 @@ public interface BookService extends IService<Book> {
      */
     BookVo getBookDetailsById(Long id);
 
-    /**
-     * 上传图书封面
-     */
-    String uploadBookImg(MultipartFile file);
 }

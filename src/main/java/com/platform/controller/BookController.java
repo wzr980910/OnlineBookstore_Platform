@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import com.platform.service.BookService;
+import com.platform.util.AliOssUtil;
 import com.platform.util.DateConversionUtil;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
@@ -15,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.platform.common.BookTypeEnum.*;
+import static com.platform.common.BookTypeEnum.SECOND;
 import static com.platform.util.result.ResultCode.*;
 
 /**
@@ -34,9 +36,14 @@ import static com.platform.util.result.ResultCode.*;
 @RequestMapping("/book")
 public class BookController {
     private BookService bookService;
+    private AliOssUtil aliOssUtil;
     @Autowired
     public void setBookService(BookService bookService) {
         this.bookService = bookService;
+    }
+    @Autowired
+    public void setAliOssUtil(AliOssUtil aliOssUtil) {
+        this.aliOssUtil = aliOssUtil;
     }
 
     @ApiOperation(value = "添加图书信息", notes = "获取BookVo实体类,将BookVo实体类中的数据分为Book实体类和book_type实体类存入数据库")
@@ -125,13 +132,13 @@ public class BookController {
     @PostMapping("/selectBook")
     public RestResult selectBook(@RequestBody BookVo bookVo){
         IPage<BookVo> page = bookService.selectBookPage(bookVo);
-        BookVo bookTotal = bookService.selectTotal(bookVo);
+        Integer bookTotal = bookService.selectTotal(bookVo);
         //根据条件查询图书数量
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
-            pageInfoMap.put("total", bookTotal.getTotal());
+            pageInfoMap.put("total", bookTotal);
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
@@ -163,7 +170,13 @@ public class BookController {
     })
     @PostMapping("/uploadBookImg")
     public RestResult uploadBookImg(@RequestParam(value = "file") MultipartFile file){
-        String url =  bookService.uploadBookImg(file);
+        String basePath = "bookPicture/";
+        String url="";
+        try {
+            url = aliOssUtil.upload(file.getBytes(), file, basePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (url != null){
             return RestResult.success(SUCCESS,"上传成功",url);
         }else {

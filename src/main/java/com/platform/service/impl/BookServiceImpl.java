@@ -1,31 +1,21 @@
 package com.platform.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.platform.mapper.BookMapper;
 import com.platform.mapper.BookTypeMapper;
-import com.platform.mapper.PublishingHouseMapper;
+import com.platform.mapper.StockMapper;
 import com.platform.mapper.TypeMapper;
-import com.platform.pojo.Admin;
 import com.platform.pojo.Book;
-import com.platform.pojo.BookType;
 import com.platform.pojo.Type;
 import com.platform.pojo.vo.BookVo;
-import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.BookService;
-import com.platform.mapper.BookMapper;
-import com.platform.util.AliOssUtil;
 import com.platform.util.CreateISBNUtil;
-import com.platform.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
@@ -40,27 +30,25 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
     implements BookService{
     private BookMapper bookMapper;
     private BookTypeMapper bookTypeMapper;
-    private AliOssUtil aliOssUtil;
     private TypeMapper typeMapper;
+    private StockMapper stockMapper;
 
     @Autowired
     private void setBookMapper(BookMapper bookMapper){this.bookMapper = bookMapper;}
     @Autowired
     private void setBookTypeMapper(BookTypeMapper bookTypeMapper){this.bookTypeMapper = bookTypeMapper;}
     @Autowired
-    public void setAliOssUtil(AliOssUtil aliOssUtil) {
-        this.aliOssUtil = aliOssUtil;
-    }
-    @Autowired
     public void setTypeMapper(TypeMapper typeMapper) {
         this.typeMapper = typeMapper;
     }
+    @Autowired
+    public void setStockMapper(StockMapper stockMapper){this.stockMapper = stockMapper;}
 
     /**
      * 根据isbn号查询
      */
     @Override
-    public Book getBookByISBN(String isbn) {
+    public BookVo getBookByISBN(String isbn) {
         //通过mapper层进行查询
         return bookMapper.getBookByISBN(isbn);
     }
@@ -73,25 +61,34 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         int row = 0;
         //首先存入图书,如果成功则将图书与对应的类型关系存入book_type表中
         //创建ISBN唯一标识码并判断是否唯一
-        String bookISBN = CreateISBNUtil.createISBN();
-        Book isOnly = getBookByISBN(bookISBN);
+        String ISBN = CreateISBNUtil.createISBN();
+        BookVo isOnly = getBookByISBN(ISBN);
         while (isOnly != null){
             //编码不唯一 继续生成
-            bookISBN = CreateISBNUtil.createISBN();
-            isOnly = getBookByISBN(bookISBN);
+            ISBN = CreateISBNUtil.createISBN();
+            isOnly = getBookByISBN(ISBN);
         }
-        bookVo.setIsbn(bookISBN);
+        bookVo.setIsbn(ISBN);
         bookVo.setIsDeleted(NO_DELETE.getCode());
         //获取类型id
         Type type = typeMapper.getIdByName(bookVo.getCategory());
         bookVo.setTypeId(type.getId());
         //通过mapper层增添数据
-        bookVo.setId(bookMapper.addBook(bookVo));
+        bookMapper.addBook(bookVo);
+        //由于mybaitsplus返回id有问题,通过iSBN获取id
+        BookVo bookId = bookMapper.getBookByISBN(ISBN);
+        bookVo.setId(bookId.getId());
         //判断是否添加成功
-        Book isExisted = bookMapper.getBookByISBN(bookVo.getIsbn());
+        BookVo isExisted = bookMapper.getBookByISBN(bookVo.getIsbn());
         if (isExisted != null){
             //添加成功,将图书与类型信息添加到book_type表中
-            return bookTypeMapper.addBookType(bookVo);
+            int tureFlag =  bookTypeMapper.addBookType(bookVo);
+            if (tureFlag >0) {
+                //图书信息和图书类型添加成功,将图书信息添加到库存表中
+                return stockMapper.addStock(bookVo);
+            }else {
+                return tureFlag;
+            }
         } else {
             //添加失败
             return row;
@@ -102,7 +99,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
      * 查询图书数量
      */
     @Override
-    public BookVo selectTotal(BookVo bookVo) {
+    public Integer selectTotal(BookVo bookVo) {
         return bookMapper.selectTotal(bookVo);
     }
 
@@ -163,7 +160,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
 
     @Override
     public Page<BookVo> selectBookPage(BookVo bookVo) {
-
         //分页
         Page<BookVo> page = new Page<>(bookVo.getCurrent(), bookVo.getSize());
         //查询
@@ -176,17 +172,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book>
         return bookMapper.getBookDetailsById(id);
     }
 
-    @Override
-    public String uploadBookImg(MultipartFile file) {
-        String basePath = "bookPicture/";
-        String bookPictureUrl="";
-        try {
-            bookPictureUrl = aliOssUtil.upload(file.getBytes(), file, basePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return bookPictureUrl;
-    }
 }
 
 

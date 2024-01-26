@@ -1,12 +1,11 @@
 package com.platform.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.platform.pojo.PublishingHouse;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.PublishingHouse;
 import com.platform.pojo.vo.PublishingHouseVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * @author wzr
@@ -30,5 +29,5 @@ public interface PublishingHouseService extends IService<PublishingHouse> {
     IPage<PublishingHouseVo> selectPublish(PublishingHouseVo publishingHouseVo);
 
     //查询出版社总数
-    PublishingHouseVo selectNumber(PublishingHouseVo publishingHouseVo);
+    Integer selectNumber(PublishingHouseVo publishingHouseVo);
 }

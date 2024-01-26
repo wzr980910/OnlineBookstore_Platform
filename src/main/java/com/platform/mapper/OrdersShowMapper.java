@@ -1,14 +1,11 @@
 package com.platform.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.OrdersShow;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.platform.pojo.respojo.OrdersDetails;
-import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.OrdersShowVo;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.io.Serializable;
 
 /**
 * @author 邓桂材
@@ -46,7 +43,7 @@ public interface OrdersShowMapper extends BaseMapper<OrdersShow> {
     /**
      * 查询订单数量
      */
-    OrdersShowVo selectTotal(OrdersShowVo ordersShowVo);
+    Integer selectTotal(OrdersShowVo ordersShowVo);
 
 }
 

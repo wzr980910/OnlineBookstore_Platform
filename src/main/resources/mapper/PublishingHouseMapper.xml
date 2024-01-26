@@ -43,17 +43,19 @@
 
     <!--修改出版社-->
     <update id="updatePublish">
-        update bopublishing_house set publishName = #{publishName}, publishAddress = #{publishAddress},
+        update publishing_house set publishName = #{publishName}, publishAddress = #{publishAddress},
                                         publishPhone = #{publishPhone}, publishEmail = #{publishEmail},
-                                        updateTime now(), isDeleted = #{isDeleted},
+                                        updateTime = now(), isDeleted = #{isDeleted}
+        where id = #{id}
     </update>
 
     <!--根据条件查询出版社-->
     <select id="selectPublish" resultType="com.platform.pojo.vo.PublishingHouseVo">
         select * from  publishing_house
         <where>
+                isDeleted = 0
             <if test="publishingHouseVo.publishName != null">
-                publishName like CONCAT('%',#{publishingHouseVo.publishName},'%')
+                and publishName like CONCAT('%',#{publishingHouseVo.publishName},'%')
             </if>
             <if test="publishingHouseVo.publishAddress != null">
                 and publishAddress like CONCAT('%',#{publishingHouseVo.publishAddress},'%')
@@ -66,11 +68,13 @@
     </select>
 
     <!--根据条件查询出版社数量-->
-    <select id="selectNumber" resultType="com.platform.pojo.vo.PublishingHouseVo">
-        select count(*) as total from  publishing_house
+    <select id="selectNumber" resultType="Integer">
+        select count(*)
+        from  publishing_house
         <where>
+                isDeleted = 0
             <if test="publishingHouseVo.publishName != null">
-                publishName like CONCAT('%',#{publishingHouseVo.publishName},'%')
+                and publishName like CONCAT('%',#{publishingHouseVo.publishName},'%')
             </if>
             <if test="publishingHouseVo.publishAddress != null">
                 and publishAddress like CONCAT('%',#{publishingHouseVo.publishAddress},'%')

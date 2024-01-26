@@ -1,7 +1,6 @@
 package com.platform.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.platform.pojo.vo.BookVo;
 import com.platform.pojo.vo.StockVo;
 import com.platform.service.StockService;
 import com.platform.util.result.RestResult;
@@ -40,10 +39,10 @@ public class StockController {
     @PostMapping("/selectStock")
     public RestResult selectStock(@RequestBody StockVo stockVo){
         IPage<StockVo> page = stockService.selectStock(stockVo);
-        StockVo stockTotal = stockService.selectTotal(stockVo);
+        Integer stockTotal = stockService.selectTotal(stockVo);
         Map<String, Object> pageInfoMap = new HashMap<>();
         pageInfoMap.put("pageInfo", page);
-        pageInfoMap.put("total", stockTotal.getTotal());
+        pageInfoMap.put("total", stockTotal);
         //查询成功，包装数据返回
         return new RestResult(ResultCode.SUCCESS,pageInfoMap);
     }
@@ -55,7 +54,7 @@ public class StockController {
             @ApiResponse(code = 101,message = "操作失败"),
     })
     @GetMapping("/warehousing")
-    public RestResult warehousing(@RequestParam Long id,@RequestParam Integer stockNum){
+    public RestResult warehousing(@RequestParam(value = "id") Long id,@RequestParam(value = "stockNum") Integer stockNum){
         int row = stockService.warehousing(id,stockNum);
         if (row > 0) {
             //入库成功

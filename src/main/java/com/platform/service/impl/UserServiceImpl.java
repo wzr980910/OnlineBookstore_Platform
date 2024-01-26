@@ -1,24 +1,15 @@
 package com.platform.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.platform.pojo.Admin;
-import com.platform.pojo.Book;
+import com.platform.mapper.UserMapper;
 import com.platform.pojo.User;
 import com.platform.pojo.vo.UserVo;
 import com.platform.service.UserService;
-import com.platform.mapper.UserMapper;
-import com.platform.util.JwtHelper;
-import com.platform.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.CoderResult;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
@@ -44,7 +35,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //设置注销状态
         for(User user : users){
             user.setIsDeleted(IS_DELETE.getCode());
-            user.setUpdateTime(new Date());
         }
         //mapper层设置注销状态
         return userMapper.removeUsersById(users);
@@ -58,7 +48,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //设置登记状态
         for(User user : users){
             user.setIsDeleted(NO_DELETE.getCode());
-            user.setUpdateTime(new Date());
         }
         //mapper层设置登记状态
         return userMapper.listUsersById(users);
@@ -88,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * 查询用户数量
      */
     @Override
-    public UserVo selectTotal(UserVo userVo) {
+    public Integer selectTotal(UserVo userVo) {
         return userMapper.selectTotal(userVo);
     }
 

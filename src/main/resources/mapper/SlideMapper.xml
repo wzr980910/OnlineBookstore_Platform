@@ -13,17 +13,26 @@
                slide.updateTime,
                slide.isDelete
         from slide
-        where slide.isDelete = 0
     </select>
 
-    <update id="deleteBatchSlideIds" parameterType="java.util.List">
-        update slide
-        set slide.isDelete = 1,updateTime = now()
-        where slide.id in
-        <foreach collection="list" item="id" separator="," open="(" close=")">
-            #{id}
+    <update id="deleteBatchSlideIds">
+        <foreach collection="ids" item="id" separator=";">
+            update slide
+            set slide.isDisplay = 0,updateTime = now() where slide.id = #{id}
         </foreach>
     </update>
 
+    <update id="listBatchSlideIds">
+        <foreach collection="ids" item="id" separator=";">
+            update slide
+            set slide.isDisplay = 1,updateTime = now() where slide.id = #{id}
+        </foreach>
+    </update>
+
+    <!--查询轮播图数量-->
+    <select id="selectTotal" resultType="Integer">
+        select count(*)
+        from slide
+    </select>
 
 </mapper>

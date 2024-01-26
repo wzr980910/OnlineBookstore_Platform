@@ -1,12 +1,11 @@
 package com.platform.mapper;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.Slide;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.platform.pojo.Slide;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
 * @author 邓桂材
@@ -18,7 +17,11 @@ import java.util.List;
 public interface SlideMapper extends BaseMapper<Slide> {
     IPage<Slide> queryAllPage(IPage<?> page);
 
-    Integer deleteBatchSlideIds(List<String> ids);
+    Integer deleteBatchSlideIds(ArrayList<Long> ids);
+
+    Integer listBatchSlideIds(ArrayList<Long> ids);
+
+    Integer selectTotal();
 
 }
 

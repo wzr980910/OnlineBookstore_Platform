@@ -45,12 +45,12 @@ public class OrdersShowController {
     @PostMapping("/selectOrders")
     public RestResult selectOrders(@RequestBody OrdersShowVo ordersShowVo){
         IPage<OrdersShowVo> page = ordersShowService.selectOrders(ordersShowVo);
-        OrdersShowVo orderTotal = ordersShowService.selectTotal(ordersShowVo);
+        Integer orderTotal = ordersShowService.selectTotal(ordersShowVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
-            pageInfoMap.put("total", orderTotal.getTotal());
+            pageInfoMap.put("total", orderTotal);
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败

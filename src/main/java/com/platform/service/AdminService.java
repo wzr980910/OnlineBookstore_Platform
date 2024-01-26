@@ -1,15 +1,12 @@
 package com.platform.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.platform.pojo.Admin;
 import com.platform.pojo.vo.AdminVo;
-import com.platform.pojo.vo.BookVo;
 import com.platform.util.result.RestResult;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * @author wzr
@@ -34,11 +31,6 @@ public interface AdminService extends IService<Admin> {
     int addAdmin(Admin admin);
 
     /**
-     * 删除账号
-     */
-    int removeAdminById(Long id);
-
-    /**
      * 修改管理员账号
      */
     int updateAdmin(Admin admin);
@@ -59,12 +51,7 @@ public interface AdminService extends IService<Admin> {
     int listAdminsById(List<Admin> admins);
 
     /**
-     * 上传头像
-     */
-    int uploadAdminImg(Long adminId, MultipartFile file);
-
-    /**
      * 查询管理员数量
      */
-    AdminVo selectTotal(AdminVo adminVo);
+    Integer selectTotal(AdminVo adminVo);
 }

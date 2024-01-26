@@ -22,29 +22,45 @@
 
     <!--登录-->
     <select id="login" resultType="com.platform.pojo.Admin">
-        select id,adminName,authority from admin where adminName = #{adminName} and password = #{password}
+        SELECT
+            id,
+            adminName,
+            authority
+        FROM
+            admin
+        WHERE
+            adminName = #{adminName} and password = #{password}
     </select>
 
     <!--通过adminName获取数据-->
     <select id="getByAdminName" resultType="com.platform.pojo.Admin">
-        select adminName,isDeleted from admin where adminName = #{adminName}
+        SELECT
+            adminName,
+            isDeleted
+        FROM
+            admin
+        WHERE
+            adminName = #{adminName}
     </select>
 
     <!--通过id获取数据-->
     <select id="getById" resultType="com.platform.pojo.Admin">
-        select adminName,isDeleted from admin where id = #{id}
+        SELECT
+            adminName,
+            isDeleted
+        FROM
+            admin
+        WHERE
+            id = #{id}
     </select>
 
     <!--添加管理员-->
     <insert id="addAdmin">
-        insert into admin (adminName,password,authority,createTime,isDeleted) values (#{admin.adminName},#{admin.password},
-                                                                                  #{admin.authority},#{admin.createTime},#{admin.isDeleted})
+        INSERT INTO admin ( adminName, PASSWORD, authority, createTime, isDeleted )
+        VALUES
+            (#{admin.adminName},#{admin.password},
+             #{admin.authority},#{admin.createTime},#{admin.isDeleted})
     </insert>
-
-    <!--删除管理员-->
-    <delete id="removeById">
-        update admin set isDeleted = #{isDeleted},updateTime = #{updateTime} where id = #{id}
-    </delete>
 
     <!--更新管理员信息-->
     <update id="updateByAdminName">
@@ -56,7 +72,6 @@
             <if test="isDeleted != null">isDeleted = #{admin.isDeleted}</if>
         </set>
         where id =#{admin.id}
-
     </update>
 
     <!--模糊查询管理员-->
@@ -79,14 +94,16 @@
     <!--批量注销管理员-->
     <update id="removeAdminsById">
         <foreach collection="admins" item="admin" separator=";">
-            update admin set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+            UPDATE admin
+            SET isDeleted = #{admin.isDeleted},updateTime = now() where id = #{admin.id}
         </foreach>
     </update>
 
     <!--批量登记管理员-->
     <update id="listAdminsById">
         <foreach collection="admins" item="admin" separator=";">
-            update admin set isDeleted = #{admin.isDeleted},updateTime = #{admin.updateTime} where id = #{admin.id}
+            UPDATE admin
+            SET isDeleted = #{admin.isDeleted},updateTime = now() where id = #{admin.id}
         </foreach>
     </update>
 
@@ -96,8 +113,9 @@
     </update>
 
     <!--查询管理员数量-->
-    <select id="selectTotal" resultType="com.platform.pojo.vo.AdminVo">
-        select count(*) from admin
+    <select id="selectTotal" resultType="Integer">
+        select count(*)
+        from admin
         <where>
             <if test="adminVo.adminName != null">
                 adminName like CONCAT('%',#{adminVo.adminName},'%')

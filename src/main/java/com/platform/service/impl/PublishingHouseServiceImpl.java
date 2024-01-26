@@ -2,21 +2,14 @@ package com.platform.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.platform.pojo.Book;
-import com.platform.pojo.BookType;
+import com.platform.mapper.PublishingHouseMapper;
 import com.platform.pojo.PublishingHouse;
-import com.platform.pojo.vo.AdminVo;
 import com.platform.pojo.vo.PublishingHouseVo;
 import com.platform.service.PublishingHouseService;
-import com.platform.mapper.PublishingHouseMapper;
-import com.platform.util.CreateISBNUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.platform.common.DeleteState.IS_DELETE;
 import static com.platform.common.DeleteState.NO_DELETE;
@@ -36,6 +29,7 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
     @Override
     public int addPublish(PublishingHouse publishingHouse) {
         //通过mapper层增添数据
+        publishingHouse.setIsDeleted(NO_DELETE.getCode());
         return publishingHouseMapper.addPublish(publishingHouse);
     }
 
@@ -45,7 +39,6 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
         //设置删除状态
         for(PublishingHouse publishingHouse : publishingHouses){
             publishingHouse.setIsDeleted(IS_DELETE.getCode());
-            publishingHouse.setUpdateTime(new Date());
         }
         //mapper层设置下架状态
         return publishingHouseMapper.removePublishsById(publishingHouses);
@@ -57,7 +50,6 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
         //设置登记状态
         for(PublishingHouse publishingHouse : publishingHouses){
             publishingHouse.setIsDeleted(NO_DELETE.getCode());
-            publishingHouse.setUpdateTime(new Date());
         }
         //mapper层设置下架状态
         publishingHouseMapper.listPublishsById(publishingHouses);
@@ -82,7 +74,7 @@ public class PublishingHouseServiceImpl extends ServiceImpl<PublishingHouseMappe
     }
 
     @Override
-    public PublishingHouseVo selectNumber(PublishingHouseVo publishingHouseVo) {
+    public Integer selectNumber(PublishingHouseVo publishingHouseVo) {
         return publishingHouseMapper.selectNumber(publishingHouseVo);
     }
 }

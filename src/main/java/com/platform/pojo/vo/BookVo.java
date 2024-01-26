@@ -1,17 +1,14 @@
 package com.platform.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -28,6 +25,7 @@ import java.util.Date;
 @ApiModel(value="图书Vo对象",description = "图书Vo对象")
 public class BookVo {
     @ApiModelProperty(value="图书id")
+    @TableId(value = "id",type = IdType.INPUT)
     private Long id;
 
     @ApiModelProperty(value="图书ISBN号")
@@ -84,8 +82,5 @@ public class BookVo {
 
     @ApiModelProperty(value="图书类型/标签名,在表中字段为type")
     private String category;
-
-    @ApiModelProperty(value="图书数量")
-    private int total;
 
 }

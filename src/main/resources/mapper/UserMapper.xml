@@ -26,14 +26,14 @@
     <!--(批量)注销-->
     <update id="removeUsersById">
         <foreach collection="users" item="user" separator=";">
-            update book set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
+            update user set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
         </foreach>
     </update>
 
     <!--(批量)登记-->
     <update id="listUsersById">
         <foreach collection="users" item="user" separator=";">
-            update book set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
+            update user set isDeleted = #{user.isDeleted},updateTime = now() where id = #{user.id}
         </foreach>
     </update>
 
@@ -48,7 +48,7 @@
                 and userName like CONCAT('%',#{userVo.userName},'%')
             </if>
             <if test="userVo.gender != null">
-                and gender = CONCAT('%',#{userVo.gender},'%')
+                and gender = #{userVo.gender}
             </if>
             <if test="userVo.phoneNumber != null">
                 and phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')
@@ -56,8 +56,8 @@
             <if test="userVo.isDeleted != null">
                 and isDeleted = #{userVo.isDeleted}
             </if>
-            limit #{userVo.current},#{userVo.size}
         </where>
+        limit #{userVo.current},#{userVo.size}
     </select>
 
     <!--查询用户详情-->
@@ -66,8 +66,9 @@
     </select>
 
     <!--查询用户数量-->
-    <select id="selectTotal" resultType="com.platform.pojo.vo.UserVo">
-        select count(*) from user
+    <select id="selectTotal" resultType="Integer">
+        select count(*)
+        from user
         <where>
             <if test="userVo.accountNumber != null">
                 accountNumber like CONCAT('%',#{userVo.accountNumber},'%')
@@ -76,7 +77,7 @@
                 and userName like CONCAT('%',#{userVo.userName},'%')
             </if>
             <if test="userVo.gender != null">
-                and gender = CONCAT('%',#{userVo.gender},'%')
+                and gender = #{userVo.gender}
             </if>
             <if test="userVo.phoneNumber != null">
                 and phoneNumber like CONCAT('%',#{userVo.phoneNumber},'%')

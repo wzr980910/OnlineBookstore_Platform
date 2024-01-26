@@ -3,18 +3,20 @@ package com.platform.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.platform.pojo.Admin;
 import com.platform.pojo.vo.AdminVo;
-import com.platform.pojo.vo.BookVo;
 import com.platform.service.AdminService;
-import com.platform.util.ThreadLocalUtil;
+import com.platform.util.AliOssUtil;
 import com.platform.util.result.RestResult;
 import com.platform.util.result.ResultCode;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +35,31 @@ import static com.platform.util.result.ResultCode.*;
 @RequestMapping("/admin")
 @Api(value = "管理员接口", tags = "管理员相关的接口", description = "管理员测试接口")
 public class AdminController {
-
     private AdminService adminService;
+    private AliOssUtil aliOssUtil;
     @Autowired
     private void setAdminService(AdminService adminService){this.adminService = adminService;}
+    @Autowired
+    public void setAliOssUtil(AliOssUtil aliOssUtil) {
+        this.aliOssUtil = aliOssUtil;
+    }
+
+    @PostMapping("/login")
+    @ApiOperation(value = "登录", notes = "登录")
+    public RestResult login(@RequestBody Admin admin) {
+        //获取账号密码
+        String adminName = admin.getAdminName();
+        String password = admin.getPassword();
+        //判断管理员账号是否为空
+        if (adminName.trim().isEmpty()){
+            return RestResult.failure(OPERATION_FAILURE.getCode(),"账号不能为空");
+        }
+        //判断密码是否为空
+        if(password.trim().isEmpty()){
+            return RestResult.failure(OPERATION_FAILURE.getCode(),"密码不能为空");
+        }
+        return adminService.login(adminName, password);
+    }
 
     @ApiOperation(value = "添加管理员", notes = "添加管理员,此时管理员Id不需要")
     @ApiResponses({
@@ -60,30 +83,6 @@ public class AdminController {
                 //添加失败
                 return RestResult.failure(OPERATION_FAILURE);
             }
-        }
-    }
-
-    @ApiImplicitParam(name="removeAdmin",value="需要删除管理员的Id",required = true,paramType = "form")
-    @ApiOperation(value = "删除管理员", notes = "删除管理员删除管理员")
-    @ApiResponses({
-            @ApiResponse(code=200,message = "操作成功"),
-            @ApiResponse(code = 101,message = "操作失败"),
-                @ApiResponse(code = 1004,message = "参数缺失")
-    })
-    @PostMapping("/removeAdmin")
-    public RestResult removeAdmin(@RequestParam Long id){
-        //没有传入id
-        if(id == null){
-            return RestResult.failure(PARAM_NOT_COMPLETE);
-        }
-        //删除账号
-        int row = adminService.removeAdminById(id);
-        if (row > 0){
-            //删除成功
-            return  RestResult.success();
-        }else {
-            //删除失败
-            return RestResult.failure(OPERATION_FAILURE);
         }
     }
 
@@ -118,12 +117,12 @@ public class AdminController {
     @PostMapping("/selectAdmin")
     public RestResult selectAdmin(@RequestBody AdminVo adminVo){
         IPage<AdminVo> page = adminService.selectAdmin(adminVo);
-        AdminVo adminTotal = adminService.selectTotal(adminVo);
+        Integer adminTotal = adminService.selectTotal(adminVo);
         if (page != null) {
             //查询成功，包装数据返回
             Map<String, Object> pageInfoMap = new HashMap<>();
             pageInfoMap.put("pageInfo", page);
-            pageInfoMap.put("total", adminTotal.getTotal());
+            pageInfoMap.put("total", adminTotal);
             return RestResult.success(ResultCode.SUCCESS, "查询成功", pageInfoMap);
         } else {
             //查询失败
@@ -161,19 +160,24 @@ public class AdminController {
         }
     }
 
-    @ApiOperation(value = "更新头像", notes = "传入格式为文件file")
+    @ApiOperation(value = "上传管理员头像", notes = "传入格式为文件file")
     @ApiResponses({
             @ApiResponse(code=200,message = "操作成功"),
             @ApiResponse(code = 101,message = "操作失败"),
     })
     @PostMapping("/uploadAdminImg")
     public RestResult uploadAdminImg(@RequestParam(value = "file") MultipartFile file){
-        Long adminId = ThreadLocalUtil.get();
-        int row = adminService.uploadAdminImg(adminId, file);
-        if (row > 0){
-            return RestResult.success(SUCCESS,"上传成功");
+        String basePath = "adminPicture/";
+        String url="";
+        try {
+            url = aliOssUtil.upload(file.getBytes(), file, basePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (url != null){
+            return RestResult.success(SUCCESS,"上传成功",url);
         }else {
-            return RestResult.failure(OPERATION_FAILURE,"上传失败");
+            return RestResult.failure(OPERATION_FAILURE,"添加头像失败");
         }
     }
 }

@@ -2,7 +2,6 @@ package com.platform.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ public class StockVo {
     @ApiModelProperty(value="图书id")
     private Long bookId;
 
-    @ApiModelProperty(value="图书isbn")
+    @ApiModelProperty(value="图书isbn,表字段名为ISBN")
     private String isbn;
 
     @ApiModelProperty(value="库存数量")
@@ -59,9 +58,7 @@ public class StockVo {
     @ApiModelProperty(value="分页查找时的页容量")
     private Integer size;
 
-    @ApiModelProperty(value="库存数量")
-    private Integer total;
-
     @ApiModelProperty(value="出版社名称")
     private String publishName;
+
 }

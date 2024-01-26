@@ -1,14 +1,12 @@
 package com.platform.mapper;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.platform.pojo.Book;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.platform.pojo.Book;
 import com.platform.pojo.vo.BookVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,9 +18,9 @@ import java.util.List;
 @Mapper
 public interface BookMapper extends BaseMapper<Book> {
 
-    Book getBookByISBN(String isbn);
+    BookVo getBookByISBN(String isbn);
 
-    Long addBook(@Param("bookVo")BookVo bookVo);
+    void addBook(@Param("bookVo")BookVo bookVo);
 
     int listBooksById(List<Book> books);
 
@@ -34,7 +32,7 @@ public interface BookMapper extends BaseMapper<Book> {
 
     BookVo getBookDetailsById(Long id);
 
-    BookVo selectTotal(@Param("bookVo")BookVo bookVo);
+    Integer selectTotal(@Param("bookVo")BookVo bookVo);
 
 }
 
