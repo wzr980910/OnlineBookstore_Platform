@@ -67,10 +67,10 @@ public class OrdersShowVo {
     private Date updateTime;
 
     @ApiModelProperty(value="起始时间")
-    private Date startingTime;
+    private String startingTime;
 
     @ApiModelProperty(value="截止时间")
-    private Date deadline;
+    private String deadline;
 
     @ApiModelProperty(value="分页查找时的页数")
     private Integer current;

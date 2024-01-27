@@ -8,9 +8,10 @@ import com.platform.pojo.OrdersShow;
 import com.platform.pojo.respojo.OrdersDetails;
 import com.platform.pojo.vo.OrdersShowVo;
 import com.platform.service.OrdersShowService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author wzr
@@ -51,27 +52,27 @@ public class OrdersShowServiceImpl extends ServiceImpl<OrdersShowMapper, OrdersS
      * 删除订单
      */
     @Override
-    public int removeOrder(Long id) {
+    public int removeOrder(Long orderId) {
         //修改删除状态
         Integer status = OrderStatus.IS_DELETED.getCode();
-        return ordersShowMapper.removeOrder(id,status);
+        return ordersShowMapper.removeOrder(orderId,status);
     }
 
     /**
      * 发货
      */
     @Override
-    public int sendGoods(Long id) {
+    public int sendGoods(Long orderId) {
         //修改发货状态
         Integer status = OrderStatus.WAIT_RECEIVE.getCode();
-        return ordersShowMapper.sendGoods(id,status);
+        return ordersShowMapper.sendGoods(orderId,status);
     }
 
     /**
      * 获取订单详情
      */
     @Override
-    public OrdersDetails getDetailsById(Long orderId) {
+    public List<OrdersDetails> getDetailsById(Long orderId) {
         //通过mapper层查询
         return ordersShowMapper.getDetailsById(orderId);
     }

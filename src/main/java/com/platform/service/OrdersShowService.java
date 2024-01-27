@@ -6,6 +6,8 @@ import com.platform.pojo.OrdersShow;
 import com.platform.pojo.respojo.OrdersDetails;
 import com.platform.pojo.vo.OrdersShowVo;
 
+import java.util.List;
+
 /**
 * @author wzr
 * @description 针对表【orders_show(订单详情表)】的数据库操作Service
@@ -26,17 +28,17 @@ public interface OrdersShowService extends IService<OrdersShow> {
     /**
      * 删除订单
      */
-    int removeOrder(Long id);
+    int removeOrder(Long orderId);
 
     /**
      * 发货
      */
-    int sendGoods(Long id);
+    int sendGoods(Long orderId);
 
     /**
      * 查询详情
      */
-    OrdersDetails getDetailsById(Long orderId);
+    List<OrdersDetails> getDetailsById(Long orderId);
 
     /**
      * 查询订单数量

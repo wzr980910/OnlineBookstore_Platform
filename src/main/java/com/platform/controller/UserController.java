@@ -91,8 +91,8 @@ public class UserController {
             @ApiResponse(code=200,message = "操作成功"),
             @ApiResponse(code = 101,message = "操作失败"),
     })
-    @PostMapping("/UserDetails")
-    public RestResult getUserDetails(@RequestParam Long id){
+    @GetMapping("/UserDetails")
+    public RestResult getUserDetails(@RequestParam(value = "id") Long id){
         UserVo userVo = userService.getUserDetailsById(id);
         if (userVo != null) {
             //查询成功

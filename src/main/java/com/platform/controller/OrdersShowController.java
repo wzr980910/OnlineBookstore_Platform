@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.platform.util.result.ResultCode.OPERATION_FAILURE;
@@ -84,10 +85,10 @@ public class OrdersShowController {
             @ApiResponse(code=200,message = "操作成功"),
             @ApiResponse(code = 101,message = "操作失败"),
     })
-    @PostMapping("/removeOrder")
-    public RestResult removeOrder(@RequestParam Long id){
+    @GetMapping("/removeOrder")
+    public RestResult removeOrder(@RequestParam Long orderId){
         //删除订单
-        int row = ordersShowService.removeOrder(id);
+        int row = ordersShowService.removeOrder(orderId);
         if (row > 0){
             return RestResult.success();
         } else {
@@ -100,10 +101,10 @@ public class OrdersShowController {
             @ApiResponse(code=200,message = "操作成功"),
             @ApiResponse(code = 101,message = "操作失败"),
     })
-    @PostMapping("/sendGoods")
-    public RestResult sendGoods(@RequestParam Long id){
+    @GetMapping("/sendGoods")
+    public RestResult sendGoods(@RequestParam Long orderId){
         //发货
-        int row  = ordersShowService.sendGoods(id);
+        int row  = ordersShowService.sendGoods(orderId);
         if (row > 0){
             return RestResult.success();
         } else {
@@ -116,10 +117,10 @@ public class OrdersShowController {
             @ApiResponse(code=200,message = "操作成功"),
             @ApiResponse(code = 101,message = "操作失败"),
     })
-    @PostMapping("/underDetails")
+    @GetMapping("/underDetails")
     public RestResult underDetails(@RequestParam Long orderId){
         //查询并返回数据
-        OrdersDetails ordersDetails = ordersShowService.getDetailsById(orderId);
+        List<OrdersDetails> ordersDetails = ordersShowService.getDetailsById(orderId);
         if (ordersDetails != null) {
             //查询成功
             return RestResult.success(ordersDetails);

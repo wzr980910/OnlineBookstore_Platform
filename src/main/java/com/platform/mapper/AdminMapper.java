@@ -31,7 +31,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
     /**
      * 添加管理员
      */
-    int addAdmin(Admin admin);
+    int addAdmin(@Param("admin") Admin admin);
 
 
 
@@ -48,12 +48,12 @@ public interface AdminMapper extends BaseMapper<Admin> {
     /**
      * 修改管理管理员信息
      */
-    int updateById(Admin admin);
+    int updateById(@Param("admin") Admin admin);
 
     /**
      * 根据条件查询管理员
      */
-    IPage<AdminVo> selectAdmin(IPage<?> page, AdminVo adminVo);
+    IPage<AdminVo> selectAdmin(IPage<?> page, @Param("adminVo")AdminVo adminVo);
 
     /**
      * 修改管理员头像
@@ -63,7 +63,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
     /**
      * 查询管理员数量
      */
-    Integer selectTotal(@Param("admin") AdminVo adminVo);
+    Integer selectTotal(@Param("adminVo") AdminVo adminVo);
 }
 
 

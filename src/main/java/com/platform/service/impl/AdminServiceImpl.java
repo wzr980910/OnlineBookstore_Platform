@@ -6,7 +6,6 @@ import com.platform.mapper.AdminMapper;
 import com.platform.pojo.Admin;
 import com.platform.pojo.vo.AdminVo;
 import com.platform.service.AdminService;
-import com.platform.util.AliOssUtil;
 import com.platform.util.JwtHelper;
 import com.platform.util.MD5Util;
 import com.platform.util.result.RestResult;
@@ -33,15 +32,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
         implements AdminService {
     private AdminMapper adminMapper;
     private JwtHelper jwtHelper;
-    private AliOssUtil aliOssUtil;
+
     @Autowired
     private void setAdminServiceImpl(AdminMapper adminMapper){this.adminMapper = adminMapper;}
     @Autowired
     private void setAdminServiceImpl(JwtHelper jwtHelper){this.jwtHelper = jwtHelper;}
-    @Autowired
-    public void setAliOssUtil(AliOssUtil aliOssUtil) {
-        this.aliOssUtil = aliOssUtil;
-    }
 
     /**
      * 登录操作

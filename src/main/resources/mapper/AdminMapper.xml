@@ -86,9 +86,9 @@
             </if>
             <if test="adminVo.isDeleted != null">
                 and isDeleted = #{adminVo.isDeleted}
-            </if>>
-            limit #{adminVo.current},#{adminVo.size}
+            </if>
         </where>
+        limit #{adminVo.current},#{adminVo.size}
     </select>
 
     <!--批量注销管理员-->
@@ -125,8 +125,7 @@
             </if>
             <if test="adminVo.isDeleted != null">
                 and isDeleted = #{adminVo.isDeleted}
-            </if>>
-            limit #{adminVo.current},#{adminVo.size}
+            </if>
         </where>
     </select>
 </mapper>

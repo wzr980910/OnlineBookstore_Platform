@@ -25,23 +25,25 @@
 
     <!--查询订单-->
     <select id="selectOrders" resultType="com.platform.pojo.vo.OrdersShowVo">
-        select o.orderId,u.userName,o.payTime,a.phone,
+        select o.orderId,u.userName,o.createTime,a.phone,
                concat(a.province,a.city,a.county,a.detail) as address,
                o.totalPrice,o.`status`
         from orders_show as o
                  left JOIN user as u on o.userId = u.id
                  left JOIN address as a on o.addressId = a.id
         <where>
-            <if test="ordersShowVo.userName != null">
-                u.userName like CONCAT('%',#{ordersShowVo.userName},'%')
+            o.status != 4
+            <if test="ordersShowVo.userName != null and !ordersShowVo.userName.equals('')">
+                and u.userName like CONCAT('%',#{ordersShowVo.userName},'%')
             </if>
             <if test="ordersShowVo.orderId != null">
-                o.orderId = #{ordersShowVo.orderId}
+                and o.orderId = #{ordersShowVo.orderId}
             </if>
-            <if test="ordersShowVo.startingTime != null">
-                o.payTime between #{orderShowVo.startingTime} and #{orderShowVo.deadline}
+            <if test="ordersShowVo.startingTime != null and !ordersShowVo.startingTime.equals('') ">
+                and o.createTime between #{ordersShowVo.startingTime} and #{ordersShowVo.deadline}
             </if>
         </where>
+        limit #{ordersShowVo.current},#{ordersShowVo.size}
     </select>
 
     <!--查询addressId-->
@@ -51,7 +53,7 @@
 
     <!--修改删除状态-->
     <update id="removeOrder">
-        update orders_show set status = #{status},updateTime = now() where id =#{id}
+        update orders_show set status = #{status},updateTime = now() where orderId =#{orderId}
     </update>
 
     <!--通过id获取status-->
@@ -61,7 +63,7 @@
 
     <!--修改删除状态-->
     <update id="sendGoods">
-        update orders_show set status = #{status},updateTime = now() where id =#{id}
+        update orders_show set status = #{status},updateTime = now() where orderId =#{orderId}
     </update>
 
     <!--查询详情(下半部分)-->
@@ -82,14 +84,15 @@
         left JOIN user as u on o.userId = u.id
         left JOIN address as a on o.addressId = a.id
         <where>
-            <if test="ordersShowVo.userName != null">
-                u.userName like CONCAT('%',#{ordersShowVo.userName},'%')
+            o.status != 4
+            <if test="ordersShowVo.userName != null  and !ordersShowVo.userName.equals('')">
+                and u.userName like CONCAT('%',#{ordersShowVo.userName},'%')
             </if>
             <if test="ordersShowVo.orderId != null">
-                o.orderId = #{ordersShowVo.orderId}
+                and o.orderId = #{ordersShowVo.orderId}
             </if>
-            <if test="ordersShowVo.startingTime != null">
-                o.payTime between #{orderShowVo.startingTime} and #{orderShowVo.deadline}
+            <if test="ordersShowVo.startingTime != null and !ordersShowVo.startingTime.equals('')">
+                and o.createTime between #{ordersShowVo.startingTime} and #{ordersShowVo.deadline}
             </if>
         </where>
     </select>

@@ -37,7 +37,6 @@
         WHERE
             type IS NOT NULL
         GROUP BY type
-
     </select>
 
     <!--查询不同月份的销量-->

@@ -6,6 +6,9 @@ import com.platform.pojo.OrdersShow;
 import com.platform.pojo.respojo.OrdersDetails;
 import com.platform.pojo.vo.OrdersShowVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 邓桂材
@@ -18,32 +21,32 @@ public interface OrdersShowMapper extends BaseMapper<OrdersShow> {
     /**
      * 查询Orders数据
      */
-    IPage<OrdersShowVo> selectOrders(IPage<?> page, OrdersShowVo ordersShowVo);
+    IPage<OrdersShowVo> selectOrders(IPage<?> page,@Param("ordersShowVo") OrdersShowVo ordersShowVo);
 
     /**
      * 查询addressId
      */
-    OrdersShow getAddressIdById(OrdersShowVo ordersShowVo);
+    OrdersShow getAddressIdById(@Param("ordersShowVo")OrdersShowVo ordersShowVo);
 
     /**
      * 修改删除状态
      */
-    int removeOrder(Long id, Integer status);
+    int removeOrder(Long orderId, Integer status);
 
     /**
      * 修改发货状态
      */
-    int sendGoods(Long id, Integer status);
+    int sendGoods(Long orderId, Integer status);
 
     /**
      * 查询订单详情
      */
-    OrdersDetails getDetailsById(Long orderId);
+    List<OrdersDetails> getDetailsById(Long orderId);
 
     /**
      * 查询订单数量
      */
-    Integer selectTotal(OrdersShowVo ordersShowVo);
+    Integer selectTotal(@Param("ordersShowVo")OrdersShowVo ordersShowVo);
 
 }
 
