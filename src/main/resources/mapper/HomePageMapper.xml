@@ -43,7 +43,7 @@
     <select id="ordersNumberByMonth" resultType="com.platform.pojo.HomePage">
         SELECT
             m.MONTH,
-            COUNT( orders_show.payTime ) AS ordersNumber
+            COUNT( orders_show.createTime ) AS ordersNumber
         FROM
             (
                 SELECT
@@ -71,7 +71,7 @@
                 SELECT
                     12
             ) m
-                LEFT JOIN orders_show ON EXTRACT( MONTH FROM orders_show.payTime ) = m.MONTH
+                LEFT JOIN orders_show ON EXTRACT( MONTH FROM orders_show.createTime ) = m.MONTH
         GROUP BY
             m.MONTH
         ORDER BY
